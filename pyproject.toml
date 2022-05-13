@@ -1,0 +1,4 @@
+[build-system]
+license = "MIT"
+requires = ["setuptools>=42", "requests>=2.27.1"]
+build-backend = "setuptools.build_meta"
