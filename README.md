@@ -1,2 +1,2 @@
 # Classeviva
-Fast API wrapper for Python
+Fast Python `API wrapper` for `Classeviva` by `GruppoSpaggiariParma`
