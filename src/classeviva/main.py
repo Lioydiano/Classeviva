@@ -43,11 +43,7 @@ class Utente(object):
             "Z-Dev-ApiKey": "+zorro+",
             "User-Agent": "zorro/1.0"
         }
-        dati = {
-            "ident": "null",
-            "pass": self.password,
-            "uid": self.id
-        }
+        dati = f"{{\"ident\": \"null\", \"pass\": {self.password}, \"uid\": {self.id}}}"
         response = self._sessione.post(
             c.Collegamenti.accesso,
             headers=intestazione,
