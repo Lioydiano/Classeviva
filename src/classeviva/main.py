@@ -40,8 +40,8 @@ class Utente(object):
     async def accedi(self) -> None:
         intestazione = {
             "content-type": "application/json",
-            "Z-Dev-ApiKey": "+zorro+",
-            "User-Agent": "zorro/1.0"
+            # "Z-Dev-ApiKey": "+zorro+",
+            # "User-Agent": "zorro/1.0"
         }
         dati = {
             "ident": "null",
@@ -54,6 +54,7 @@ class Utente(object):
             data=dati
         )
         self._dati = response.json()
+        print(self._dati)
         self.inizio = datetime.fromtimestamp(self._dati["release"])
         self.fine = datetime.fromtimestamp(self._dati["expire"])
         self._token = self._dati["token"]
