@@ -40,8 +40,8 @@ class Utente(object):
     async def accedi(self) -> None:
         intestazione = {
             "content-type": "application/json",
-            # "Z-Dev-ApiKey": "+zorro+",
-            # "User-Agent": "zorro/1.0"
+            "Z-Dev-ApiKey": "+zorro+",
+            "User-Agent": "zorro/1.0"
         }
         dati = {
             "ident": "null",
