@@ -9,3 +9,6 @@ Il codice sorgente può essere modificato su [`GitHub Dev`](https://github.dev) 
 
 # Pacchetto
 Il pacchetto può essere scaricato da [`PyPI`](https://pypi.org) tramite `pip`, il progetto si trova [`qui`](https://pypi.org/project/Classeviva.py/)
+
+# API REST
+L'`API REST` si trova a [`web.spaggiari.eu/rest`](https://web.spaggiari.eu/rest/), e il suo codice sorgente insieme alla documentazione si trova [su `GitHub`](https://github.com/michelangelomo/Classeviva-Official-Endpoints)
