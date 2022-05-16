@@ -1,6 +1,5 @@
 import asyncio
 from datetime import datetime
-from typing import Any
 import requests
 
 from .collegamenti import collegamenti as c
@@ -17,22 +16,13 @@ class Utente(object):
         self._dati = {}
 
     def __str__(self) -> str:
-        if (self.connesso()):
-            return f"<oggetto classeviva.Utente a {id(self)} connesso sin da {self.inizio}>"
         return f"<oggetto classeviva.Utente a {id(self)}>"
-
-    def __del__(self) -> None:
-        print(f"{self} è stato ucciso")
-        super().__del__()
-
-    def __eq__(self) -> bool:
-        return (self.id == self.id) and (self.password == self.password)
 
     def __hash__(self) -> int:
         return int(str(round(hash(self.id), 8)) + str(round(hash(self.password), 8)))
 
     def __bool__(self) -> bool:
-        return bool(self.id and self.password)
+        return self.id and self.password
 
     def __call__(self) -> None:
         asyncio.run(self.accedi())
@@ -43,7 +33,7 @@ class Utente(object):
             "Z-Dev-ApiKey": "+zorro+",
             "User-Agent": "zorro/1.0"
         }
-        dati = f"{{\"ident\": \"null\", \"pass\": \"{self.password}\", \"uid\": \"{self.id}\"}}"
+        dati = f'{{"ident": null, "pass": "{self.password}", "uid": "{self.id}"}}'
         response = self._sessione.post(
             c.Collegamenti.accesso,
             headers=intestazione,
@@ -51,8 +41,8 @@ class Utente(object):
         )
         self._dati = response.json()
         print(self._dati)
-        self.inizio = datetime.fromtimestamp(self._dati["release"])
-        self.fine = datetime.fromtimestamp(self._dati["expire"])
+        self.inizio = datetime.fromisoformat(self._dati["release"])
+        self.fine = datetime.fromisoformat(self._dati["expire"])
         self._token = self._dati["token"]
 
     @property
@@ -65,7 +55,7 @@ class Utente(object):
     def dati(self) -> dict[str, str]:
         return {
             "id": self._dati["ident"],
-            "nome": self._dati["fistName"],
+            "nome": self._dati["firstName"],
             "cognome": self._dati["lastName"]
         }
 
