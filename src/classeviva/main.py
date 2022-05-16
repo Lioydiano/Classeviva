@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 import requests
 
 from .collegamenti import collegamenti as c
@@ -39,16 +39,18 @@ class Utente(object):
             headers=intestazione,
             data=dati
         )
-        self._dati = response.json()
-        print(self._dati)
-        self.inizio = datetime.fromisoformat(self._dati["release"])
-        self.fine = datetime.fromisoformat(self._dati["expire"])
-        self._token = self._dati["token"]
+        if (response.status_code == 200):
+            self._dati = response.json()
+            self.inizio = datetime.fromisoformat(self._dati["release"])
+            self.fine = datetime.fromisoformat(self._dati["expire"])
+            self._token = self._dati["token"]
+        elif (response.status_code == 422):
+            raise e.PasswordNonValida(f"La password di {self} non combacia")
 
     @property
     def connesso(self) -> bool:
         if (self.inizio is not None):
-            return (datetime.now() - self.inizio).total_seconds() < v.TEMPO_CONNESSIONE
+            return (datetime.now(timezone.utc) - self.inizio).total_seconds() < v.TEMPO_CONNESSIONE
         return False
 
     @property
@@ -64,5 +66,5 @@ class Utente(object):
         if (self._token is None):
             raise e.TokenErrore("Non sei connesso")
         elif (not self.connesso):
-            return e.TokenScaduto("Il token è scaduto")
+            raise e.TokenScaduto("Il token è scaduto")
         return self._token
