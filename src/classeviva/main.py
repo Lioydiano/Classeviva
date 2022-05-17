@@ -112,7 +112,7 @@ class ListaUtenti(set[Utente]):
         return False
 
     async def accedi(self) -> None:
-        asyncio.gather(*[utente.accedi() for utente in self.non_connessi])
+        await asyncio.gather(*[utente.accedi() for utente in self.non_connessi])
 
     def iterante(self, funzione):
         def involucro(*args, **kwargs) -> None:
