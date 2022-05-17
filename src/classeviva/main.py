@@ -35,15 +35,10 @@ class Utente(object):
     async def accedi(self) -> None:
         if (self.connesso):
             return
-        intestazione = {
-            "content-type": "application/json",
-            "Z-Dev-ApiKey": "+zorro+",
-            "User-Agent": "zorro/1.0"
-        }
         dati = f'{{"ident": null, "pass": "{self.password}", "uid": "{self.id}"}}'
         response = self._sessione.post(
             c.Collegamenti.accesso,
-            headers=intestazione,
+            headers=v.intestazione,
             data=dati
         )
         if (response.status_code == 200):
@@ -57,7 +52,8 @@ class Utente(object):
     @property
     def connesso(self) -> bool:
         if (hasattr(self, "inizio")):
-            return (datetime.now(timezone.utc) - self.inizio).total_seconds() < v.TEMPO_CONNESSIONE
+            passati = (datetime.now(timezone.utc) - self.inizio).total_seconds()
+            return  passati < v.TEMPO_CONNESSIONE
         return False
 
     @property
@@ -109,9 +105,11 @@ class ListaUtenti(set[Utente]):
                     return True
         return False
 
-    def aggiungi(self, utente: Utente) -> None:
+    def aggiungi(self, utente: Utente) -> bool:
         if (isinstance(utente, Utente) and utente not in self):
             self.add(utente)
+            return True
+        return False
 
     async def accedi(self) -> None:
         asyncio.gather(*[utente.accedi() for utente in self.non_connessi])
