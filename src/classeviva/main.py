@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio
 from datetime import datetime, timezone
 from typing import Iterable
@@ -14,7 +15,7 @@ class Utente(object):
         self.id = id
         self.password = password
         self._sessione = requests.Session()
-        self._dati = {}
+        self._dati: dict = {}
 
     def __str__(self) -> str:
         return f"<oggetto classeviva.Utente a {id(self)}>"
@@ -25,7 +26,15 @@ class Utente(object):
     def __call__(self) -> None:
         asyncio.run(self.accedi())
 
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    def __eq__(self, other: Utente) -> bool:
+        return (self.id == other.id and self.password == other.password)
+
     async def accedi(self) -> None:
+        if (self.connesso):
+            return
         intestazione = {
             "content-type": "application/json",
             "Z-Dev-ApiKey": "+zorro+",
@@ -71,12 +80,13 @@ class Utente(object):
         return self._token
 
 
-class ListaUtenti(set):
+class ListaUtenti(set[Utente]):
 
     def __init__(self, utenti: Iterable[Utente]) -> None:
         for utente in utenti:
             if (isinstance(utente, Utente)):
                 self.add(utente)
+        self.__riduci()
 
     def __str__(self) -> str:
         return f"<oggetto classeviva.ListaUtenti a {id(self)}>"
@@ -84,8 +94,27 @@ class ListaUtenti(set):
     def __call__(self) -> None:
         asyncio.run(self.accedi())
 
+    def __riduci(self) -> None:
+        for utente in self:
+            copia = self.copy()
+            copia.remove(utente)
+            for utentino in copia:
+                if (utente == utentino):
+                    self.remove(utentino)
+
+    def __contains__(self, utente: Utente) -> bool:
+        if (isinstance(utente, Utente)):
+            for utentino in self:
+                if (utente == utentino):
+                    return True
+        return False
+
+    def aggiungi(self, utente: Utente) -> None:
+        if (isinstance(utente, Utente) and utente not in self):
+            self.add(utente)
+
     async def accedi(self) -> None:
-        asyncio.gather(*[utente.accedi() for utente in self.connessi])
+        asyncio.gather(*[utente.accedi() for utente in self.non_connessi])
 
     def iterante(self, funzione):
         def involucro(*args, **kwargs) -> None:
@@ -95,4 +124,8 @@ class ListaUtenti(set):
 
     @property
     def connessi(self) -> set[Utente]:
-        return {utente for utente in self if utente.connesso}
+        return {utente for utente in self if (utente.connesso)}
+
+    @property
+    def non_connessi(self) -> set[Utente]:
+        return {utente for utente in self if (not utente.connesso)}
