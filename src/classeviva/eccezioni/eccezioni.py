@@ -17,6 +17,14 @@ class UtenteErrore(Exception):
 
 
 class PasswordNonValida(UtenteErrore):
+    ...
+
+
+class NonAccesso(Exception):
     """
-    Password non valida
+    Errori dovuti a un mancato accesso
     """
+
+
+class SenzaDati(NonAccesso):
+    ...

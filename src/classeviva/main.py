@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime, timezone
+from typing import Iterable
 import requests
 
 from .collegamenti import collegamenti as c
@@ -17,9 +18,6 @@ class Utente(object):
 
     def __str__(self) -> str:
         return f"<oggetto classeviva.Utente a {id(self)}>"
-
-    def __hash__(self) -> int:
-        return int(str(round(hash(self.id), 8)) + str(round(hash(self.password), 8)))
 
     def __bool__(self) -> bool:
         return self.id and self.password
@@ -49,17 +47,20 @@ class Utente(object):
 
     @property
     def connesso(self) -> bool:
-        if (self.inizio is not None):
+        if (hasattr(self, "inizio")):
             return (datetime.now(timezone.utc) - self.inizio).total_seconds() < v.TEMPO_CONNESSIONE
         return False
 
     @property
     def dati(self) -> dict[str, str]:
-        return {
-            "id": self._dati["ident"],
-            "nome": self._dati["firstName"],
-            "cognome": self._dati["lastName"]
-        }
+        try:
+            return {
+                "id": self._dati["ident"],
+                "nome": self._dati["firstName"],
+                "cognome": self._dati["lastName"]
+            }
+        except KeyError:
+            raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
 
     @property
     def token(self) -> str:
@@ -68,3 +69,30 @@ class Utente(object):
         elif (not self.connesso):
             raise e.TokenScaduto("Il token è scaduto")
         return self._token
+
+
+class ListaUtenti(set):
+
+    def __init__(self, utenti: Iterable[Utente]) -> None:
+        for utente in utenti:
+            if (isinstance(utente, Utente)):
+                self.add(utente)
+
+    def __str__(self) -> str:
+        return f"<oggetto classeviva.ListaUtenti a {id(self)}>"
+
+    def __call__(self) -> None:
+        asyncio.run(self.accedi())
+
+    async def accedi(self) -> None:
+        asyncio.gather(*[utente.accedi() for utente in self.connessi])
+
+    def iterante(self, funzione):
+        def involucro(*args, **kwargs) -> None:
+            for elemento in self:
+                funzione(elemento, *args, **kwargs)
+        return involucro
+
+    @property
+    def connessi(self) -> set[Utente]:
+        return {utente for utente in self if utente.connesso}
