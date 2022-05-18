@@ -49,11 +49,32 @@ class Utente(object):
         elif (response.status_code == 422):
             raise e.PasswordNonValida(f"La password di {self} non combacia")
 
+    # Decoratore che connette l'utente prima di eseguire la funzione se è necessario
+    def connettente(self, funzione):
+        def involucro(*args, **kwargs) -> None:
+            if (not self.connesso):
+                self()
+            funzione(self, *args, **kwargs)
+        return involucro
+
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/status.md
+    @property
+    def stato(self) -> bool:
+        intestazione = v.intestazione.copy()
+        if (not hasattr(self, "_token")):
+            raise e.TokenNonPresente("Token non presente")
+        intestazione["Z-Auth-Token"] = self._token
+        response = self._sessione.get(
+            c.Collegamenti.stato,
+            headers=intestazione
+        )
+        return response.status_code == 200 # Token ancora valido
+
     @property
     def connesso(self) -> bool:
         if (hasattr(self, "inizio")):
             passati = (datetime.now(timezone.utc) - self.inizio).total_seconds()
-            return  passati < v.TEMPO_CONNESSIONE
+            return passati < v.TEMPO_CONNESSIONE
         return False
 
     @property

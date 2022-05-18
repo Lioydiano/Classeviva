@@ -10,6 +10,10 @@ class TokenScaduto(TokenErrore):
     ...
 
 
+class TokenNonPresente(TokenErrore):
+    ...
+
+
 class UtenteErrore(Exception):
     """
     Errori legati alle utenze
