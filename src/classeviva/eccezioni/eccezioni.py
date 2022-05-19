@@ -32,3 +32,7 @@ class NonAccesso(Exception):
 
 class SenzaDati(NonAccesso):
     ...
+
+
+class ErroreHTTP(Exception):
+    ...

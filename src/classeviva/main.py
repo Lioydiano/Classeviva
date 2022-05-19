@@ -57,6 +57,23 @@ class Utente(object):
             funzione(self, *args, **kwargs)
         return involucro
 
+    @property
+    def secondi_rimasti(self) -> int:
+        intestazione = v.intestazione.copy()
+        if (not hasattr(self, "_token")):
+            raise e.TokenNonPresente("Token non presente")
+        intestazione["Z-Auth-Token"] = self._token
+        response = self._sessione.get(
+            c.Collegamenti.stato,
+            headers=intestazione
+        )
+        if (response.status_code != 200)
+            raise e.ErroreHTTP(f"Risposta non corretta, codice {response.status_code}")
+        try:
+            response.json()["status"]["remains"]
+        except Exception as e:
+            print(e)
+
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/status.md
     @property
     def stato(self) -> bool:
