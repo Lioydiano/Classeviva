@@ -49,6 +49,19 @@ class Utente(object):
         elif (response.status_code == 422):
             raise e.PasswordNonValida(f"La password di {self} non combacia")
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md
+    async def documenti(self) -> dict[str, list[dict[str, str]]]:
+        if (not self.connesso):
+            self()
+        response = self._sessione.get(
+            c.Collegamenti.documenti.format(self.id),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"Richiesta non corretta, codice {response.status_code}")
+
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
         if (not hasattr(self, "_token")):
