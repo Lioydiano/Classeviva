@@ -1,9 +1,9 @@
 #!\usr\bin\env python3
 
 
-# pip install classeviva.py==0.0.4a2.dev0
+# pip install classeviva.py==0.0.4a2.dev2
 import setuptools
-VERSION = "0.0.4a2.dev0"
+VERSION = "0.0.4a2.dev2"
 setuptools.setup(
     name='Classeviva.py',
     packages=[

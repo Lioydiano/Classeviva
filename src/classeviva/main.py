@@ -66,7 +66,7 @@ class Utente(object):
 
     @property
     def biglietto_completo(self) -> dict[str, str]:
-        response = self._sessione.post(
+        response = self._sessione.get(
             c.Collegamenti.biglietto,
             headers=self.__intestazione()
         )
