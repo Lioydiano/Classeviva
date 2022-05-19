@@ -130,4 +130,5 @@ dmypy.json
 
 # Altro
 test.py
+uploader.py
 .vscode/
