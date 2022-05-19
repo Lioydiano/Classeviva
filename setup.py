@@ -1,6 +1,9 @@
 #!\usr\bin\env python3
 
+
+# pip install classeviva.py==0.0.4a2.dev0
 import setuptools
+VERSION = "0.0.4a2.dev0"
 setuptools.setup(
     name='Classeviva.py',
     packages=[
@@ -15,7 +18,7 @@ setuptools.setup(
         'classeviva.collegamenti': 'src/classeviva/collegamenti',
         'classeviva.variabili': 'src/classeviva/variabili',
     },
-    version='0.0.4a1.dev0',
+    version=VERSION,
     requires=["requests"],
     description='Classeviva Python API wrapper',
     long_description=open('README.md').read(),
@@ -23,7 +26,7 @@ setuptools.setup(
     author='FLAK-ZOSO',
     author_email='mattia.marchese.2006@gmail.com',
     url='https://github.com/Lioydiano/Classeviva',
-    download_url='https://github.com/Lioydiano/Classeviva/archive/refs/tags/v0.0.4a1.dev0.tar.gz',
+    download_url=f'https://github.com/Lioydiano/Classeviva/archive/refs/tags/v{VERSION}.tar.gz',
     keywords=[
         'classeviva', 
         'api'

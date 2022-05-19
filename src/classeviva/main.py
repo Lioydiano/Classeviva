@@ -49,6 +49,13 @@ class Utente(object):
         elif (response.status_code == 422):
             raise e.PasswordNonValida(f"La password di {self} non combacia")
 
+    def __intestazione(self) -> dict[str, str]:
+        intestazione = v.intestazione.copy()
+        if (not hasattr(self, "_token")):
+            raise e.TokenNonPresente("Token non presente")
+        intestazione["Z-Auth-Token"] = self._token
+        return intestazione
+
     # Decoratore che connette l'utente prima di eseguire la funzione se è necessario
     def connettente(self, funzione):
         def involucro(*args, **kwargs) -> None:
@@ -58,34 +65,42 @@ class Utente(object):
         return involucro
 
     @property
+    def biglietto_completo(self) -> dict[str, str]:
+        response = self._sessione.post(
+            c.Collegamenti.biglietto,
+            headers=self.__intestazione()
+        )
+        if (response.status_code != 200):
+            raise e.ErroreHTTP(f"Richiesta non corretta, codice {response.status_code}")
+        try:
+            return response.json()
+        except Exception as e_:
+            print(e_)
+
+    @property
+    def biglietto(self) -> str:
+        return self.biglietto_completo["ticket"]
+
+    @property
     def secondi_rimasti(self) -> int:
-        intestazione = v.intestazione.copy()
-        if (not hasattr(self, "_token")):
-            raise e.TokenNonPresente("Token non presente")
-        intestazione["Z-Auth-Token"] = self._token
         response = self._sessione.get(
             c.Collegamenti.stato,
-            headers=intestazione
+            headers=self.__intestazione()
         )
-        if (response.status_code != 200)
-            raise e.ErroreHTTP(f"Risposta non corretta, codice {response.status_code}")
+        if (response.status_code != 200):
+            raise e.ErroreHTTP(f"Richiesta non corretta, codice {response.status_code}")
         try:
-            response.json()["status"]["remains"]
-        except Exception as e:
-            print(e)
+            return response.json()["status"]["remains"]
+        except Exception as e_:
+            print(e_)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/status.md
     @property
     def stato(self) -> bool:
-        intestazione = v.intestazione.copy()
-        if (not hasattr(self, "_token")):
-            raise e.TokenNonPresente("Token non presente")
-        intestazione["Z-Auth-Token"] = self._token
-        response = self._sessione.get(
+        return self._sessione.get(
             c.Collegamenti.stato,
-            headers=intestazione
-        )
-        return response.status_code == 200 # Token ancora valido
+            headers=self.__intestazione()
+        ).status_code == 200 # Token ancora valido
 
     @property
     def connesso(self) -> bool:
