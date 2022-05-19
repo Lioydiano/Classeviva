@@ -55,7 +55,8 @@ class Utente(object):
             self()
         response = self._sessione.get(
             c.Collegamenti.documenti.format(self.id),
-            headers=self.__intestazione()
+            headers=self.__intestazione(),
+            body=f"studentId: {self.id}"
         )
         if (response.status_code == 200):
             return response.json()
