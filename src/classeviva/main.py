@@ -53,7 +53,7 @@ class Utente(object):
     async def documenti(self) -> dict[str, list[dict[str, str]]]:
         if (not self.connesso):
             self()
-        response = self._sessione.get(
+        response = self._sessione.post(
             c.Collegamenti.documenti.format(self.id.removeprefix("S")),
             headers=self.__intestazione()
         )
