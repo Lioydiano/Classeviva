@@ -66,6 +66,22 @@ class Utente(object):
                 {response.json()}
             """)
 
+    async def controlla_documento(self, documento: str) -> bool:
+        if (not self.connesso):
+            self()
+        response = self._sessione.post(
+            c.Collegamenti.controllo_documento.format(self.id.removeprefix("S"), documento),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()["document"]["available"]
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
         if (not hasattr(self, "_token")):
