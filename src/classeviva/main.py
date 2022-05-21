@@ -60,7 +60,11 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()
         else:
-            raise e.ErroreHTTP(f"Richiesta non corretta, codice {response.status_code}")
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
 
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
@@ -84,7 +88,11 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code != 200):
-            raise e.ErroreHTTP(f"Richiesta non corretta, codice {response.status_code}")
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
         try:
             return response.json()
         except Exception as e_:
@@ -101,7 +109,11 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code != 200):
-            raise e.ErroreHTTP(f"Richiesta non corretta, codice {response.status_code}")
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
         try:
             return response.json()["status"]["remains"]
         except Exception as e_:
