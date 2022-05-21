@@ -54,7 +54,7 @@ class Utente(object):
         if (not self.connesso):
             self()
         response = self._sessione.get(
-            c.Collegamenti.documenti.format(self.id),
+            c.Collegamenti.documenti.format(self.id.removeprefix("S")),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
