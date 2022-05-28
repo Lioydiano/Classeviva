@@ -178,13 +178,13 @@ class Utente(object):
             raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
 
     @property
-    def pagelle(self) -> dict[str, str]:
+    def pagelle(self) -> list[dict[str, str]]:
         documenti_ = asyncio.run(self.documenti())
-        return {
-            "descrizione": documenti_["description"],
-            "conferma": documenti_["confirmLink"],
-            "lettura": documenti_["viewLink"]
-        }
+        return [{
+            "descrizione": documento_["desc"],
+            "conferma": documento_["confirmLink"],
+            "lettura": documento_["viewLink"]
+        } for documento_ in documenti_["schoolReports"]]
 
     @property
     def token(self) -> str:
