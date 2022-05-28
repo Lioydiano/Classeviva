@@ -178,6 +178,15 @@ class Utente(object):
             raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
 
     @property
+    def pagelle(self) -> dict[str, str]:
+        documenti_ = asyncio.run(self.documenti())
+        return {
+            "descrizione": documenti_["description"],
+            "conferma": documenti_["confirmLink"],
+            "lettura": documenti_["viewLink"]
+        }
+
+    @property
     def token(self) -> str:
         if (self._token is None):
             raise e.TokenErrore("Non sei connesso")
