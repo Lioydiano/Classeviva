@@ -171,8 +171,8 @@ Note
 .. [1] Studente, in Classeviva, è un utente il cui identificatore inizia con il carattere 'S'
 .. [2] Biglietto, in Classeviva, è una stringa di caratteri, ma non si è ancora capito a cosa serva
 .. [3] `Richiesta di stato <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/status.md>`_
-.. [4] Sezione "schoolReport" della risposta alla `richiesta di documenti <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md>`
-.. [5] Sezione "documents" della risposta alla `richiesta di documenti <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md>`
+.. [4] Sezione "schoolReport" della risposta alla `richiesta di documenti <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md>`_
+.. [5] Sezione "documents" della risposta alla `richiesta di documenti <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md>`_
 .. [6] `Richiesta di accesso <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/login.md>`_
 .. [7] `Richiesta di assenze <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/absences.md>`_
 .. [8] Alla versione 0.1.0, ma è un miglioramento che verrà aggiunto in futuro
