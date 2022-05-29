@@ -48,11 +48,17 @@ class Utente(object):
             self._token = self._dati["token"]
         elif (response.status_code == 422):
             raise e.PasswordNonValida(f"La password di {self} non combacia")
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md
     async def documenti(self) -> dict[str, list[dict[str, str]]]:
         if (not self.connesso):
-            self()
+            await self.accedi()
         response = self._sessione.post(
             c.Collegamenti.documenti.format(self.id.removeprefix("S")),
             headers=self.__intestazione()
@@ -68,7 +74,7 @@ class Utente(object):
 
     async def controlla_documento(self, documento: str) -> bool:
         if (not self.connesso):
-            self()
+            await self.accedi()
         response = self._sessione.post(
             c.Collegamenti.controllo_documento.format(self.id.removeprefix("S"), documento),
             headers=self.__intestazione()
@@ -84,7 +90,7 @@ class Utente(object):
 
     async def leggi_documento(self, documento: str) -> str:
         if (not self.connesso):
-            self()
+            await self.accedi()
         response = self._sessione.post(
             c.Collegamenti.leggi_documento.format(self.id.removeprefix("S"), documento),
             headers=self.__intestazione()
@@ -100,7 +106,7 @@ class Utente(object):
 
     async def assenze(self) -> list[dict[str, Any]]:
         if (not self.connesso):
-            self()
+            await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.assenze.format(self.id.removeprefix("S")),
             headers=self.__intestazione()
@@ -196,11 +202,14 @@ class Utente(object):
     @property
     def pagelle(self) -> list[dict[str, str]]:
         documenti_ = asyncio.run(self.documenti())
-        return [{
-            "descrizione": documento_["desc"],
-            "conferma": documento_["confirmLink"],
-            "lettura": documento_["viewLink"]
-        } for documento_ in documenti_["schoolReports"]]
+        try:
+            return [{
+                "descrizione": documento_["desc"],
+                "conferma": documento_["confirmLink"],
+                "lettura": documento_["viewLink"]
+            } for documento_ in documenti_["schoolReports"]]
+        except KeyError:
+            raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
 
     @property
     def token(self) -> str:
