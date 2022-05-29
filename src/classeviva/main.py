@@ -72,6 +72,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/check%20document.md
     async def controlla_documento(self, documento: str) -> bool:
         if (not self.connesso):
             await self.accedi()
@@ -88,6 +89,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/read%20document.md
     async def leggi_documento(self, documento: str) -> str:
         if (not self.connesso):
             await self.accedi()
@@ -98,6 +100,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["document"]["content"]
         else:
+            # Dà sempre errore 404
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
                 {response.text}
