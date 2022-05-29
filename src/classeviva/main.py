@@ -1,7 +1,7 @@
 from __future__ import annotations
 import asyncio
 from datetime import datetime, timezone
-from typing import Iterable
+from typing import Any, Iterable
 import requests
 
 from .collegamenti import collegamenti as c
@@ -91,6 +91,22 @@ class Utente(object):
         )
         if (response.status_code == 200):
             return response.json()["document"]["content"]
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    async def assenze(self) -> Any:
+        if (not self.connesso):
+            self()
+        response = self._sessione.get(
+            c.Collegamenti.assenze.format(self.id.removeprefix("S")),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()["absences"]
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
