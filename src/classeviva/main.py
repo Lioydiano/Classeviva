@@ -104,6 +104,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/absences.md
     async def assenze(self) -> list[dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
