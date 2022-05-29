@@ -18,7 +18,7 @@ Iniziare
 La prima volta che usi ``Classeviva.py``? Inizia da qui!
 
 - **Primi passi:** `intro <intro.html>`_
-- **Esempi:** Un esempio si trova nel `README <https://github.com/Lioydiano/Classeviva/README.md>`_, altri sono in una `pagina di esempi <https://classeviva.readthedocs.io/it/latest/esempi.html>`_
+- **Esempi:** Un esempio si trova nel `README <https://github.com/Lioydiano/Classeviva/blob/main/README.md>`_, altri sono in una `pagina di esempi <esempi.html>`_
 
 Aiuto
 --------------
