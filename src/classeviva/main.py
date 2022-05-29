@@ -106,7 +106,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()["absences"]
+            return response.json()
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
