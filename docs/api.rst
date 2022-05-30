@@ -321,6 +321,95 @@ L'intero codice del modulo è riportato qui, perché breve ed esemplificativo di
         assenze: str = f"{base}/v1/students/{{}}/absences/details"
 
 
+``classeviva.eccezioni``
+===========================
+``classeviva.eccezioni`` è il modulo che contiene le eccezioni sollevate da funzioni e metodi contenuti in ``classeviva``
+
+
+``TokenErrore``
+---------------------------
+Rappresenta tutti gli errori legati al token di accesso all'API
+
+    .. code-block:: python
+
+        class TokenErrore(Exception):
+            ...
+
+Sottoclassi
+
+    - ``classeviva.eccezioni.TokenNonValido`` - il token non è riconosciuto come valido dall'API
+
+    .. code-block:: python
+
+        class TokenNonValido(TokenErrore):
+            ...
+    
+    - ``classeviva.eccezioni.TokenScaduto`` - il token è scaduto
+
+    .. code-block:: python
+
+        class TokenScaduto(TokenErrore):
+            ...
+    
+    - ``classeviva.eccezioni.TokenNonPresente`` - il token non è presente, ovvero non è stato effettuato l'accesso
+
+    .. code-block:: python
+
+        class TokenNonPresente(TokenErrore):
+            ...
+
+
+``UtenteErrore``
+---------------------------
+Rappresenta tutti gli errori legati all'utente e in particolare alla compilazione dei suoi campi obbligatori
+
+    .. code-block:: python
+
+        class UtenteErrore(Exception):
+            """
+            Errori legati alle utenze
+            """
+
+Sottoclassi
+
+    - ``classeviva.eccezioni.PasswordNonValida`` - la password non combacia, l'API non ha potuto accettarla [16]_
+
+    .. code-block:: python
+
+        class PasswordNonValida(UtenteErrore):
+            ...
+
+``NonAccesso``
+---------------------------
+Rappresenta tutti gli errori probabilmente dovuti ad un mancato accesso, e che non rientrano in un'altra categoria [17]_
+
+.. code-block:: python
+
+    class NonAccesso(Exception):
+        """
+        Errori dovuti a un mancato accesso
+        """
+
+Sottoclassi
+
+    - ``classeviva.eccezioni.SenzaDati`` - l'utente non ha tra i suoi attributi privati quelli dati dall'accesso
+
+    .. code-block:: python
+
+        class SenzaDati(NonAccesso):
+            ...
+
+
+``ErroreHTTP``
+---------------------------
+Rappresenta tutti gli errori HTTP provenienti dalle richieste fatte col modulo ``requests``
+
+.. code-block:: python
+
+    class ErroreHTTP(Exception):
+        ...
+
+Fornisce tutte le informazioni date dalla risposta di ``requests`` [18]_
 
 Note
 ===========================
@@ -340,3 +429,13 @@ Note
 .. [13] Il modulo, alla versione ``0.1.0``, è comprensivo di un solo namespace contenente URL
 .. [14] Il suo utilizzo è volto alla fase di sviluppo, ma può essere adoperato anche in fase di produzione in caso di necessità
 .. [15] Per ogni versione sono disponibili soltanto gli URL per le richieste le cui rispettive funzioni sono già implementate
+.. [16] L'API lo comunica tramite una risposta ``HTTP`` con codice ``422``
+.. [17] Ne è un esempio ``TokenNonPresente``, che pur rientrando nella descrizione di ``NonAccesso`` non ne è sottoclasse perché già parte di ``TokenErrore``
+.. [18] Alla versione ``0.1.0`` va fatto manualmente sollevando l'eccezione
+    .. code-block:: python
+
+        raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
