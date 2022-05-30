@@ -411,6 +411,35 @@ Rappresenta tutti gli errori HTTP provenienti dalle richieste fatte col modulo `
 
 Fornisce tutte le informazioni date dalla risposta di ``requests`` [18]_
 
+.. code-block:: python
+
+    raise e.ErroreHTTP(f"""
+            Richiesta non corretta, codice {response.status_code}
+            {response.text}
+            {response.json()}
+        """)
+
+
+``classeviva.variabili``
+===========================
+``classeviva.variabili`` è il modulo che contiene le costanti utili per evitare ridondanza nel codice
+
+L'intero codice del modulo è riportato qui, perché breve ed esemplificativo di sé stesso.
+
+.. code-block:: python
+
+    # Constante che indica il tempo di connessione per una sessione
+    TEMPO_CONNESSIONE: int = 1800
+
+
+    # Constante che indica l'intestazione per le richieste
+    intestazione: dict[str, str] = {
+        "content-type": "application/json",
+        "Z-Dev-ApiKey": "+zorro+",
+        "User-Agent": "zorro/1.0"
+    }
+
+
 Note
 ===========================
 
@@ -431,11 +460,4 @@ Note
 .. [15] Per ogni versione sono disponibili soltanto gli URL per le richieste le cui rispettive funzioni sono già implementate
 .. [16] L'API lo comunica tramite una risposta ``HTTP`` con codice ``422``
 .. [17] Ne è un esempio ``TokenNonPresente``, che pur rientrando nella descrizione di ``NonAccesso`` non ne è sottoclasse perché già parte di ``TokenErrore``
-.. [18] Alla versione ``0.1.0`` va fatto manualmente sollevando l'eccezione
-    .. code-block:: python
-
-        raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+.. [18] Alla versione ``0.1.0`` va fatto manualmente sollevando l'eccezione come descritto sotto
