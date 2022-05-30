@@ -2,6 +2,7 @@ from __future__ import annotations
 import asyncio
 from datetime import datetime, timezone
 from typing import Any, Iterable
+from collections.abc import Iterable as IterableABC
 import requests
 
 from .collegamenti import collegamenti as c
@@ -29,8 +30,10 @@ class Utente(object):
     def __hash__(self) -> int:
         return hash(self.id)
 
-    def __eq__(self, other: Utente) -> bool:
-        return (self.id == other.id and self.password == other.password)
+    def __eq__(self, other) -> bool:
+        if (isinstance(other, Utente)):
+            return (self.id == other.id and self.password == other.password)
+        return False
 
     async def accedi(self) -> None:
         if (self.connesso):
@@ -238,13 +241,14 @@ class ListaUtenti(set[Utente]):
     def __call__(self) -> None:
         asyncio.run(self.accedi())
 
-    def __riduci(self) -> None:
-        for utente in self:
-            copia = self.copy()
-            copia.remove(utente)
-            for utentino in copia:
-                if (utente == utentino):
-                    self.remove(utentino)
+    def __add__(self, oggetto) -> ListaUtenti:
+        if (isinstance(oggetto, Utente)):
+            self.aggiungi(oggetto)
+        elif (isinstance(oggetto, IterableABC)):
+            for oggetto_ in oggetto:
+                self.aggiungi(oggetto_)
+        else:
+            raise TypeError(f"{oggetto} non è un oggetto valido")
 
     def __contains__(self, utente: Utente) -> bool:
         if (isinstance(utente, Utente)):
@@ -252,6 +256,14 @@ class ListaUtenti(set[Utente]):
                 if (utente == utentino):
                     return True
         return False
+
+    def __riduci(self) -> None:
+        for utente in self:
+            copia = self.copy()
+            copia.remove(utente)
+            for utentino in copia:
+                if (utente == utentino):
+                    self.remove(utentino)
 
     def aggiungi(self, utente: Utente) -> bool:
         if (isinstance(utente, Utente) and utente not in self):

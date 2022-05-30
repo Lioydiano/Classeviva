@@ -140,7 +140,7 @@ Metodi
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
 
 
-Metodi magici
+Metodi magici [11]_
 
     - ``self.__call__()`` | ``self()`` - connette in modo sincrono l'utente
 
@@ -148,6 +148,15 @@ Metodi magici
 
         def __call__(self) -> None:
             asyncio.run(self.accedi())
+    
+    - ``self.__eq__()`` - gestisce le uguaglianze
+
+    .. code-block:: python
+
+        def __eq__(self, other) -> bool:
+            if (isinstance(other, Utente)):
+                return (self.id == other.id and self.password == other.password)
+            return False
 
 
 Decoratori
@@ -210,6 +219,84 @@ Proprietà
         def non_connessi(self) -> set[Utente]:
             return {utente for utente in self if (not utente.connesso)}
 
+
+Metodi
+
+    - ``await self.accedi()`` - effettua l'accesso alla sessione [6]_ **per tutti gli utenti**
+
+    .. code-block:: python
+
+        async def accedi(self) -> None:
+            await asyncio.gather(*[utente.accedi() for utente in self.non_connessi])
+    
+    - ``self.aggiungi(utente)`` - aggiunge un utente alla lista
+
+    .. code-block:: python
+
+        def aggiungi(self, utente: Utente) -> bool:
+            if (isinstance(utente, Utente) and utente not in self):
+                self.add(utente)
+                return True
+            return False
+    
+    Parametri
+    
+        - ``utente: Utente``: l'utente da aggiungere
+    
+    Ritorno
+
+        - ``bool`` - True se l'utente è stato aggiunto, False altrimenti
+    
+    Avvertenze
+
+        - Utilizza il metodo ``add()`` della classe ``set`` da cui eredita, potrebbe sollevare delle eccezioni non gestite dal programma
+
+
+Metodi magici [11]_
+
+    - ``self.__call__()`` | ``self()`` - connette in modo sincrono tutti gli utenti
+
+    .. code-block:: python
+
+        def __call__(self) -> None:
+            asyncio.run(self.accedi())
+    
+    - ``self.__add__()`` - gestisce le addizioni (``+``, ``+=``)
+
+    .. code-block:: python
+
+        def __add__(self, oggetto) -> ListaUtenti:
+            if (isinstance(oggetto, Utente)):
+                self.aggiungi(oggetto)
+            elif (isinstance(oggetto, IterableABC)):
+                for oggetto_ in oggetto:
+                    self.aggiungi(oggetto_)
+            else:
+                raise TypeError(f"{oggetto} non è un oggetto valido")
+    
+    - ``self.__contains__()`` - stabilisce se un utente è presente nella lista
+
+    .. code-block:: python
+
+        def __contains__(self, utente: Utente) -> bool:
+            if (isinstance(utente, Utente)):
+                for utentino in self:
+                    if (utente == utentino):
+                        return True
+            return False
+
+
+Decoratori
+
+    - ``@classeviva.ListaUtenti.iterante`` - ripete le operazioni della funzione decorata su tutti i membri della lista quando viene chiamata
+
+    .. code-block:: python
+
+        @lista_utenti.iterante
+        def foo(x: classeviva.ListaUtenti) -> None:
+            print(x.connessi)
+
+
 Note
 ===========================
 
@@ -223,3 +310,5 @@ Note
 .. [8] Alla versione 0.1.0, ma è un miglioramento che verrà aggiunto in futuro
 .. [9] Non è necessario che contenga soltanto oggetti di quel tipo, grazie al metodo privato ``__riduci``
 .. [10] Vengono verificati tramite la loro proprietà ``Utente.connesso``
+.. [11] Sono riportati i metodi magici la cui sovrascrittura è rilevante ai fini dell'utilizzo del modulo, gli altri possno essere trovati nel codice sorgente
+.. [12] Il metodo ``__call__`` è un metodo magico, che viene chiamato quando si fa ``utente()``
