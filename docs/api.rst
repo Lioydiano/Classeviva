@@ -1,7 +1,7 @@
 Intro
 ===========================
 
-``ClassevivaAPI`` contiene al suo interno i seguenti moduli:
+``Classeviva.py`` contiene al suo interno i seguenti moduli:
 
     - ``classeviva``: modulo principale, contiene tutti i metodi per la gestione della API
     - ``classeviva.collegamenti``: URL dell'API
