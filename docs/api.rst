@@ -51,7 +51,7 @@ Costruttore
 Attributi
 
     - ``self.id: str``: username dell'utente
-    - ``password``: password dell'utente
+    - ``password: str``: password dell'utente
     - ``_sessione: requests.Session``: sessione di comunicazione con l'API
     - ``_dati: dict``: dati dell'utente
 
@@ -165,6 +165,51 @@ Decoratori
         - Non funziona con le funzioni asincrone (``async def``) [8]_
 
 
+``ListaUtenti``
+---------------------------
+
+Un'espansione di un ``set`` di ``classeviva.Utente``, con metodi utili a eliminare duplicati e ad eseguire in modo asincrono i metodi iterando sugli utenti.
+
+
+Classe
+
+    .. code-block:: python
+
+        class ListaUtenti(set[Utente])
+
+
+Costruttore
+
+    .. code-block:: python
+
+        def __init__(
+            self, 
+            utenti: Iterable[Utente]
+        ) -> None:
+    
+    Parametri:
+
+    - ``utenti: Iterable[Utente]`` - iterabile contenente [9]_ oggetti di tipo ``classeviva.Utente``
+
+
+Proprietà
+
+    - ``connessi: set[Utente]`` - elenco degli alunni connessi [10]_ della lista
+
+    .. code-block:: python
+
+        @property
+        def connessi(self) -> set[Utente]:
+            return {utente for utente in self if (utente.connesso)}
+
+    - ``non_connessi: set[Utente]`` - elenco degli alunni non connessi [10]_ della lista
+
+    .. code-block:: python
+
+        @property
+        def non_connessi(self) -> set[Utente]:
+            return {utente for utente in self if (not utente.connesso)}
+
 Note
 ===========================
 
@@ -176,3 +221,5 @@ Note
 .. [6] `Richiesta di accesso <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/login.md>`_
 .. [7] `Richiesta di assenze <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/absences.md>`_
 .. [8] Alla versione 0.1.0, ma è un miglioramento che verrà aggiunto in futuro
+.. [9] Non è necessario che contenga soltanto oggetti di quel tipo, grazie al metodo privato ``__riduci``
+.. [10] Vengono verificati tramite la loro proprietà ``Utente.connesso``
