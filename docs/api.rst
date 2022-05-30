@@ -4,7 +4,7 @@ Intro
 ``ClassevivaAPI`` contiene al suo interno i seguenti moduli:
 
     - ``classeviva``: modulo principale, contiene tutti i metodi per la gestione della API
-    - ``classeviva.collegamenti``: url dell'API
+    - ``classeviva.collegamenti``: URL dell'API
     - ``classeviva.eccezioni``: eccezioni che possono essere sollevate da Classeviva.py
     - ``classeviva.variabili``: costanti e classi per gestire i dati di Classeviva
 
@@ -297,6 +297,31 @@ Decoratori
             print(x.connessi)
 
 
+``classeviva.collegamenti`` [13]_
+===========================
+``classeviva.collegamenti`` è il modulo che contiene gli URL per le richieste all'API di ClasseViva. [14]_
+
+
+``Collegamenti``
+---------------------------
+La classe ``classeviva.collegamenti.Collegamenti`` contiene gli URL per le richieste all'API di ClasseViva [15]_
+
+L'intero codice del modulo è riportato qui, perché breve ed esemplificativo di sé stesso.
+
+.. code-block:: python
+
+    class Collegamenti:
+        base: str = "https://web.spaggiari.eu/rest"
+        accesso: str = f"{base}/v1/auth/login"
+        stato: str = f"{base}/v1/auth/status"
+        biglietto: str = f"{base}/v1/auth/ticket"
+        documenti: str = f"{base}/v1/students/{{}}/documents"
+        controllo_documento: str = f"{base}/v1/students/{{}}/documents/check/{{}}"
+        leggi_documento: str = f"{base}/v1/students/{{}}/documents/read/{{}}"
+        assenze: str = f"{base}/v1/students/{{}}/absences/details"
+
+
+
 Note
 ===========================
 
@@ -307,8 +332,11 @@ Note
 .. [5] Sezione "documents" della risposta alla `richiesta di documenti <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md>`_
 .. [6] `Richiesta di accesso <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/login.md>`_
 .. [7] `Richiesta di assenze <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/absences.md>`_
-.. [8] Alla versione 0.1.0, ma è un miglioramento che verrà aggiunto in futuro
+.. [8] Alla versione ``0.1.0``, ma è un miglioramento che verrà aggiunto in futuro
 .. [9] Non è necessario che contenga soltanto oggetti di quel tipo, grazie al metodo privato ``__riduci``
 .. [10] Vengono verificati tramite la loro proprietà ``Utente.connesso``
 .. [11] Sono riportati i metodi magici la cui sovrascrittura è rilevante ai fini dell'utilizzo del modulo, gli altri possno essere trovati nel codice sorgente
 .. [12] Il metodo ``__call__`` è un metodo magico, che viene chiamato quando si fa ``utente()``
+.. [13] Il modulo, alla versione ``0.1.0``, è comprensivo di un solo namespace contenente URL
+.. [14] Il suo utilizzo è volto alla fase di sviluppo, ma può essere adoperato anche in fase di produzione in caso di necessità
+.. [15] Per ogni versione sono disponibili soltanto gli URL per le richieste le cui rispettive funzioni sono già implementate
