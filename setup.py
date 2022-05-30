@@ -2,7 +2,7 @@
 
 
 import setuptools
-VERSION = "0.1.0rc1.dev1"
+VERSION = "0.1.0"
 setuptools.setup(
     name='Classeviva.py',
     packages=[
@@ -34,7 +34,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: Implementation :: CPython",
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
