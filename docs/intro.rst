@@ -5,7 +5,7 @@ Di seguito è spiegato come ottenere il pacchetto nel proprio script di ``Python
 
 Scarica
 ===========================
-Il pacchetto può essere scaricato da `PyPI <https://pypi.org>` tramite ``pip``, il progetto si trova `qui <https://pypi.org/project/Classeviva.py/>`
+Il pacchetto può essere scaricato da `PyPI <https://pypi.org>`_ tramite ``pip``, il progetto si trova `qui <https://pypi.org/project/Classeviva.py/>`_
 
 .. code-block:: bash
 
