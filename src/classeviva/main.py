@@ -117,7 +117,10 @@ class Utente(object):
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.assenze_da.format(self.id.removeprefix("S"), inizio),
+            c.Collegamenti.assenze_da.format(
+                self.id.removeprefix("S"), 
+                inizio.replace("-", "")
+            ),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
@@ -138,7 +141,11 @@ class Utente(object):
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.assenze_da.format(self.id.removeprefix("S"), inizio),
+            c.Collegamenti.assenze_da.format(
+                self.id.removeprefix("S"), 
+                inizio.replace('-', ''), 
+                fine.replace('-', '')
+            ),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
