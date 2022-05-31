@@ -110,7 +110,9 @@ class Utente(object):
             """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/from.md
-    async def assenze_da(self, inizio: str) -> Any:
+    async def assenze_da(self, inizio: str=None) -> Any:
+        if (inizio is None):
+            return await self.assenze()
         # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
         datetime.strptime(inizio, r'%Y-%m-%d')
 
@@ -133,7 +135,11 @@ class Utente(object):
             """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/from_to.md
-    async def assenze_da_a(self, inizio: str, fine: str) -> Any:
+    async def assenze_da_a(self, inizio: str=None, fine: str=None) -> Any:
+        if (inizio is None):
+            return await self.assenze()
+        elif (fine is None):
+            return await self.assenze_da(inizio)
         # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
         datetime.strptime(inizio, r'%Y-%m-%d')
         datetime.strptime(fine, r'%Y-%m-%d')
