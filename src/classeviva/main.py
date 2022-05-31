@@ -129,7 +129,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["events"]
         elif (response.status_code == 404):
             errore: str = response.json()["error"]
             # 120:CvvRestApi\/wrong date format
@@ -178,7 +178,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["events"]
         elif (response.status_code == 404):
             errore: str = response.json()["error"]
             # 120:CvvRestApi\/wrong date format
