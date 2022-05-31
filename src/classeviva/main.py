@@ -110,7 +110,7 @@ class Utente(object):
             """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/from.md
-    async def assenze_da(self, inizio: str=None) -> Any:
+    async def assenze_da(self, inizio: str=None) -> list[dict[str, Any]]:
         if (inizio is None):
             return await self.assenze()
         # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
@@ -155,7 +155,7 @@ class Utente(object):
             """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/from_to.md
-    async def assenze_da_a(self, inizio: str=None, fine: str=None) -> Any:
+    async def assenze_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
         if (inizio is None):
             return await self.assenze()
         elif (fine is None):
