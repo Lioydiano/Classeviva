@@ -114,7 +114,10 @@ class Utente(object):
         if (inizio is None):
             return await self.assenze()
         # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
-        datetime.strptime(inizio, r'%Y-%m-%d')
+        try:
+            datetime.strptime(inizio, r'%Y-%m-%d')
+        except ValueError:
+            raise e.FormatoNonValido("Formato data non valido, dev'essere YYYY-MM-DD")
 
         if (not self.connesso):
             await self.accedi()
@@ -158,8 +161,11 @@ class Utente(object):
         elif (fine is None):
             return await self.assenze_da(inizio)
         # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
-        datetime.strptime(inizio, r'%Y-%m-%d')
-        datetime.strptime(fine, r'%Y-%m-%d')
+        try:
+            datetime.strptime(inizio, r'%Y-%m-%d')
+            datetime.strptime(fine, r'%Y-%m-%d')
+        except ValueError:
+            raise e.FormatoNonValido("Formato data non valido, dev'essere YYYY-MM-DD")
 
         if (not self.connesso):
             await self.accedi()
