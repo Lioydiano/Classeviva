@@ -138,6 +138,47 @@ Metodi
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
+    
+    - ``await self.assenze_da(inizio: str=None)`` - ottieni gli eventi in cui l'utente ha fatto assenza a partire da una certa data
+
+    .. code-block:: python
+
+        async def assenze_da(self, evento: str) -> list[dict[str, Any]]:
+    
+    Parametri
+    
+        - ``inizio: str``: data di inizio dell'evento da cui partire, in formato ``YYYY-MM-DD``
+    
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - gli eventi in cui l'utente ha fatto assenza in formato JSON
+    
+    Eccezioni
+    
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
+
+    - ``await self.assenze_evento(inizio: str=None, fine: str=None)`` - ottieni gli eventi compresi tra due date in cui l'utente ha fatto assenza
+
+    .. code-block:: python
+
+        async def assenze_evento(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
+    
+    Parametri
+
+        - ``inizio: str``: data di inizio degli eventi da cui partire, in formato ``YYYY-MM-DD``
+        - ``fine: str``: data di fine degli eventi fino a cui partire, in formato ``YYYY-MM-DD``
+    
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - gli eventi in cui l'utente ha fatto assenza in formato JSON
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
 
 
 Metodi magici [11]_
