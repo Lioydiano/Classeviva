@@ -127,6 +127,22 @@ class Utente(object):
         )
         if (response.status_code == 200):
             return response.json()
+        elif (response.status_code == 404):
+            # 120:CvvRestApi\/wrong date format
+            if (response.json()["error"].beginswith("120")):
+                raise e.FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
+            # 122:CvvRestApi\/invalid date range
+            elif (response.json()["error"].beginswith("122")):
+                raise e.DataFuoriGamma(f"""
+                    La data è fuori dall'anno scolastico
+                    Inizio: {inizio}
+                """)
+            else:
+                raise e.ErroreHTTP(f"""
+                    Richiesta non corretta, codice {response.status_code}
+                    {response.text}
+                    {response.json()}
+                """)
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
@@ -156,6 +172,25 @@ class Utente(object):
         )
         if (response.status_code == 200):
             return response.json()
+        elif (response.status_code == 404):
+            # 120:CvvRestApi\/wrong date format
+            if (response.json()["error"].beginswith("120")):
+                raise e.FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
+            # 122:CvvRestApi\/invalid date range
+            elif (response.json()["error"].beginswith("122")):
+                raise e.DataFuoriGamma(f"""
+                    Una data è fuori dall'anno scolastico.
+                    OPPURE
+                    La data di inizio è successiva a quella di fine.
+                    Inizio: {inizio}
+                    Fine: {fine}
+                """)
+            else:
+                raise e.ErroreHTTP(f"""
+                    Richiesta non corretta, codice {response.status_code}
+                    {response.text}
+                    {response.json()}
+                """)
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}

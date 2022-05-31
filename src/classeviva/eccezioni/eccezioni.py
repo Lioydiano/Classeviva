@@ -36,3 +36,24 @@ class SenzaDati(NonAccesso):
 
 class ErroreHTTP(Exception):
     ...
+
+
+class DataErrore(Exception):
+    """
+    Errori legati alle date
+    """
+
+
+class FormatoNonValido(DataErrore):
+    """
+    Formato della data non valido (il formato del parametro deve essere YYYY-MM-DD)
+    """
+
+
+class DataFuoriGamma(DataErrore):
+    """
+    Data al di fuori della gamma di date valide per l'anno scolastico
+    
+    "dates must be beween 20210901 and 20220531; first date be NOT greater than second one"
+    (Le date devono essere tra il primo di Settembre e il giorno corrente O la fine dell'anno scolastico)
+    """
