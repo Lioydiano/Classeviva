@@ -92,24 +92,6 @@ class Utente(object):
                 {response.json()}
             """)
 
-    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/read%20document.md
-    async def leggi_documento(self, documento: str) -> str:
-        if (not self.connesso):
-            await self.accedi()
-        response = self._sessione.post(
-            c.Collegamenti.leggi_documento.format(self.id.removeprefix("S"), documento),
-            headers=self.__intestazione()
-        )
-        if (response.status_code == 200):
-            return response.json()["document"]["content"]
-        else:
-            # Dà sempre errore 404
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
-
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/absences.md
     async def assenze(self) -> list[dict[str, Any]]:
         if (not self.connesso):
@@ -120,6 +102,47 @@ class Utente(object):
         )
         if (response.status_code == 200):
             return response.json()["events"]
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/from.md
+    async def assenze_da(self, inizio: str) -> Any:
+        # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
+        datetime.strptime(inizio, r'%Y-%m-%d')
+
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.assenze_da.format(self.id.removeprefix("S"), inizio),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/from_to.md
+    async def assenze_da_a(self, inizio: str, fine: str) -> Any:
+        # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
+        datetime.strptime(inizio, r'%Y-%m-%d')
+        datetime.strptime(fine, r'%Y-%m-%d')
+
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.assenze_da.format(self.id.removeprefix("S"), inizio),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}

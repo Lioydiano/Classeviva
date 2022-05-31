@@ -7,3 +7,5 @@ class Collegamenti:
     controllo_documento: str = f"{base}/v1/students/{{}}/documents/check/{{}}"
     leggi_documento: str = f"{base}/v1/students/{{}}/documents/read/{{}}"
     assenze: str = f"{base}/v1/students/{{}}/absences/details"
+    assenze_da: str = f"{base}/v1/students/{{}}/absences/details/{{}}"
+    assenze_da_a: str = f"{base}/v1/students/{{}}/absences/details/{{}}/{{}}"
