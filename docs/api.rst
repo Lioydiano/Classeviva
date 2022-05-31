@@ -159,11 +159,11 @@ Metodi
         - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
 
-    - ``await self.assenze_evento(inizio: str=None, fine: str=None)`` - ottieni gli eventi compresi tra due date in cui l'utente ha fatto assenza
+    - ``await self.assenze_da_a(inizio: str=None, fine: str=None)`` - ottieni gli eventi compresi tra due date in cui l'utente ha fatto assenza
 
     .. code-block:: python
 
-        async def assenze_evento(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
+        async def assenze_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
     
     Parametri
 
