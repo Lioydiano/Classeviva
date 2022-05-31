@@ -128,11 +128,12 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()
         elif (response.status_code == 404):
+            errore: str = response.json()["error"]
             # 120:CvvRestApi\/wrong date format
-            if (response.json()["error"].beginswith("120")):
+            if (errore.startswith("120")):
                 raise e.FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
             # 122:CvvRestApi\/invalid date range
-            elif (response.json()["error"].beginswith("122")):
+            elif (errore.startswith("122")):
                 raise e.DataFuoriGamma(f"""
                     La data è fuori dall'anno scolastico
                     Inizio: {inizio}
@@ -173,11 +174,12 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()
         elif (response.status_code == 404):
+            errore: str = response.json()["error"]
             # 120:CvvRestApi\/wrong date format
-            if (response.json()["error"].beginswith("120")):
+            if (errore.startswith("120")):
                 raise e.FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
             # 122:CvvRestApi\/invalid date range
-            elif (response.json()["error"].beginswith("122")):
+            elif (errore.startswith("122")):
                 raise e.DataFuoriGamma(f"""
                     Una data è fuori dall'anno scolastico.
                     OPPURE
