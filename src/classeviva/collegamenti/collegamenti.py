@@ -9,3 +9,4 @@ class Collegamenti:
     assenze: str = f"{base}/v1/students/{{}}/absences/details"
     assenze_da: str = f"{base}/v1/students/{{}}/absences/details/{{}}"
     assenze_da_a: str = f"{base}/v1/students/{{}}/absences/details/{{}}/{{}}"
+    agenda_da_a: str = f"{base}/v1/students/{{}}/agenda/all/{{}}/{{}}"

@@ -1,3 +1,7 @@
+from datetime import datetime
+import classeviva.eccezioni as e
+
+
 # Constante che indica il tempo di connessione per una sessione
 TEMPO_CONNESSIONE: int = 1800
 
@@ -8,3 +12,27 @@ intestazione: dict[str, str] = {
     "Z-Dev-ApiKey": "+zorro+",
     "User-Agent": "zorro/1.0"
 }
+
+
+def valida_date(*date_: str) -> None:
+    # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
+    try:
+        for data in date_:
+            datetime.strptime(data, r'%Y-%m-%d')
+    except ValueError:
+        raise e.FormatoNonValido("Formato data non valido, dev'essere YYYY-MM-DD")
+
+
+def anno() -> int:
+    return datetime.now().year
+
+
+def data_inizio_anno() -> str:
+    return f"{anno()}0901"
+
+
+def data_fine_anno() -> str:
+    # Restituisce la data di fine anno scolastico o quella del giorno corrente
+    if (datetime.now() < datetime(anno(), 6, 30)):
+        return f"{anno()}{datetime.now().strftime('%m%d')}"
+    return f"{anno()}0630"

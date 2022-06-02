@@ -113,11 +113,7 @@ class Utente(object):
     async def assenze_da(self, inizio: str=None) -> list[dict[str, Any]]:
         if (inizio is None):
             return await self.assenze()
-        # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
-        try:
-            datetime.strptime(inizio, r'%Y-%m-%d')
-        except ValueError:
-            raise e.FormatoNonValido("Formato data non valido, dev'essere YYYY-MM-DD")
+        v.valida_date(inizio)
 
         if (not self.connesso):
             await self.accedi()
@@ -160,12 +156,7 @@ class Utente(object):
             return await self.assenze()
         elif (fine is None):
             return await self.assenze_da(inizio)
-        # https://stackoverflow.com/questions/16870663/how-do-i-validate-a-date-string-format-in-python
-        try:
-            datetime.strptime(inizio, r'%Y-%m-%d')
-            datetime.strptime(fine, r'%Y-%m-%d')
-        except ValueError:
-            raise e.FormatoNonValido("Formato data non valido, dev'essere YYYY-MM-DD")
+        v.valida_date(inizio, fine)
 
         if (not self.connesso):
             await self.accedi()
@@ -199,6 +190,50 @@ class Utente(object):
                     {response.text}
                     {response.json()}
                 """)
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    async def agenda(self) -> Any:
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.agenda_da_a.format(
+                self.id.removeprefix("S"),
+                v.data_inizio_anno(),
+                v.data_fine_anno()
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    async def agenda_da_a(self, inizio: str, fine: str) -> Any:
+        if (None in {inizio, fine}):
+            return await self.agenda()
+        v.valida_date(inizio, fine)
+
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.agenda_da_a.format(
+                self.id.removeprefix("S"),
+                inizio.replace('-', ''), 
+                fine.replace('-', '')
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
