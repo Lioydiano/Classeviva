@@ -217,7 +217,7 @@ class Utente(object):
                 {response.json()}
             """)
 
-    async def agenda_da_a(self, inizio: str, fine: str) -> Any:
+    async def agenda_da_a(self, inizio: str=None, fine: str=None) -> Any:
         if (None in {inizio, fine}):
             return await self.agenda()
         v.valida_date(inizio, fine)
