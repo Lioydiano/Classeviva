@@ -356,7 +356,10 @@ class ListaUtenti(set[Utente]):
     def iterante(self, funzione):
         def involucro(*args, **kwargs) -> None:
             for elemento in self:
-                funzione(elemento, *args, **kwargs)
+                try:
+                    funzione(elemento, *args, **kwargs)
+                except Exception as e_:
+                    print(e_)
         return involucro
 
     @property
