@@ -305,7 +305,7 @@ class Utente(object):
                 {response.json()}
             """)
 
-    async def didattica(self) -> Any:
+    async def didattica(self) -> list[dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
@@ -315,7 +315,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["didacticts"]
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
@@ -323,7 +323,7 @@ class Utente(object):
                 {response.json()}
             """)
 
-    async def didattica_elemento(self, id: str) -> Any:
+    async def didattica_elemento(self, id: int) -> Any:
         ...
 
     def __intestazione(self) -> dict[str, str]:
