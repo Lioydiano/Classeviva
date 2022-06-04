@@ -2,8 +2,8 @@ from datetime import datetime
 import classeviva.eccezioni as e
 
 
-# Constante che indica il tempo di connessione per una sessione
-TEMPO_CONNESSIONE: int = 1800
+# Constante che indica il tempo di connessione per una sessione in secondi
+TEMPO_CONNESSIONE: int = 5400
 
 
 # Constante che indica l'intestazione per le richieste
