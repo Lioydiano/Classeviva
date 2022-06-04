@@ -32,7 +32,11 @@ def data_inizio_anno() -> str:
 
 
 def data_fine_anno() -> str:
+    return f"{anno()}0630"
+
+
+def data_fine_anno_o_oggi() -> str:
     # Restituisce la data di fine anno scolastico o quella del giorno corrente
     if (datetime.now() < datetime(anno(), 6, 30)):
         return f"{anno()}{datetime.now().strftime('%m%d')}"
-    return f"{anno()}0630"
+    return data_fine_anno()

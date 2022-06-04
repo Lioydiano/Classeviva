@@ -61,7 +61,7 @@ Proprietà
     Semplici
 
         - ``biglietto_completo: dict[str, str]`` - `Biglietto <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/ticket.md>`_ [2]_
-        - ``biglietto: str`` -  il biglietto, in forma di stringa e non in formato JSON
+        - ``biglietto: str`` -  il biglietto, in forma di stringa e non in formato JSON [JSON]_
         - ``secondi_rimasti: int`` - secondi rimasti alla sessione [3]_
         - ``stato: bool`` - comunica se la sessione è ancora attiva
         - ``connesso: bool`` - comunica se la sessione è attiva **senza fare richieste all'API**
@@ -172,13 +172,75 @@ Metodi
     
     Ritorno
 
-        - ``list[dict[str, Any]]`` - gli eventi in cui l'utente ha fatto assenza in formato JSON
+        - ``list[dict[str, Any]]`` - gli eventi in cui l'utente ha fatto assenza
     
     Eccezioni
 
         - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
         - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
+    
+    - ``await self.agenda_da_a(inizio: str, fine: str)`` - ottieni gli eventi che compongono l'agenda dell'utente
+
+    .. code-block:: python
+
+        async def agenda_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
+
+    Parametri
+
+        - ``inizio: str``: data di inizio degli eventi da cui partire, in formato ``YYYY-MM-DD``
+        - ``fine: str``: data di fine degli eventi fino a cui restituirli, in formato ``YYYY-MM-DD``
+    
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - gli eventi dell'argenda nel periodo di tempo specificato
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
+        - ``classeviva.eccezioni.ErroreHTTP404`` - eccezione generata in caso di errore HTTP 404
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP di altro tipo
+
+    - ``await self.agenda_codice_da_a(codice: str, inizio: str, fine: str)`` - ottieni gli eventi dell'utente con un determinato codice evento
+
+    .. code-block:: python
+
+        async def agenda_codice_da_a(self, codice: str, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
+    
+    Parametri
+
+        - ``codice: str``: codice evento sulla base del quale filtrare gli eventi
+        - ``inizio: str``: data di inizio degli eventi da cui partire, in formato ``YYYY-MM-DD``
+        - ``fine: str``: data di fine degli eventi fino a cui restituirli, in formato ``YYYY-MM-DD``
+
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - gli eventi dell'argenda nel periodo di tempo specificato che hanno il codice evento specificato
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
+        - ``classeviva.eccezioni.ErroreHTTP404`` - eccezione generata in caso di errore HTTP 404
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP di altro tipo
+
+    - ``await self.agenda()`` - ottieni gli eventi dell'utente nell'anno scolastico corrente
+
+    .. code-block:: python
+
+        async def agenda(self) -> list[dict[str, Any]]:
+    
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - gli eventi dell'argenda nell'anno scolastico corrente
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
+        - ``classeviva.eccezioni.ErroreHTTP404`` - eccezione generata in caso di errore HTTP 404
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP di altro tipo
 
 
 Metodi magici [11]_
@@ -460,6 +522,14 @@ Fornisce tutte le informazioni date dalla risposta di ``requests`` [18]_
             {response.json()}
         """)
 
+Sottoclassi
+
+    - ``classeviva.eccezioni.ErroreHTTP404`` - la richiesta ha restituito un errore 404
+
+    .. code-block:: python
+
+        class ErroreHTTP404(ErroreHTTP):
+            ...
 
 ``classeviva.variabili``
 ===========================
@@ -484,6 +554,7 @@ L'intero codice del modulo è riportato qui, perché breve ed esemplificativo di
 Note
 ===========================
 
+.. [JSON] Per "formato ``JSON``" si intende il formato restituito dall'``API``, che non corrisponde con il valore di ritorno della funzione che, utilizzando il modulo ``json``, converte i dati in oggetti di Python
 .. [1] Studente, in Classeviva, è un utente il cui identificatore inizia con il carattere 'S'
 .. [2] Biglietto, in Classeviva, è una stringa di caratteri, ma non si è ancora capito a cosa serva
 .. [3] `Richiesta di stato <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/status.md>`_

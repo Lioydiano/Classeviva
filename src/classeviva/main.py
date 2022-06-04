@@ -185,8 +185,7 @@ class Utente(object):
                     Fine: {fine}
                 """)
             else:
-                raise e.ErroreHTTP(f"""
-                    Richiesta non corretta, codice {response.status_code}
+                raise e.ErroreHTTP404(f"""
                     {response.text}
                     {response.json()}
                 """)
@@ -217,6 +216,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Agenda/from_to.md
     async def agenda_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
         if (None in {inizio, fine}):
             return await self.agenda()
@@ -234,6 +234,25 @@ class Utente(object):
         )
         if (response.status_code == 200):
             return response.json()["agenda"]
+        elif (response.status_code == 404):
+            errore: str = response.json()["error"]
+            # 120:CvvRestApi\/wrong date format
+            if (errore.startswith("120")):
+                raise e.FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
+            # 122:CvvRestApi\/invalid date range
+            elif (errore.startswith("122")):
+                raise e.DataFuoriGamma(f"""
+                    Una data è fuori dall'anno scolastico.
+                    OPPURE
+                    La data di inizio è successiva a quella di fine.
+                    Inizio: {inizio}
+                    Fine: {fine}
+                """)
+            else:
+                raise e.ErroreHTTP404(f"""
+                    {response.text}
+                    {response.json()}
+                """)
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
@@ -261,10 +280,24 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["agenda"]
         elif (response.status_code == 404):
-            raise e.ErroreHTTP404(f"""
-                {response.text}
-                {response.json()}
-            """)
+            errore: str = response.json()["error"]
+            # 120:CvvRestApi\/wrong date format
+            if (errore.startswith("120")):
+                raise e.FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
+            # 122:CvvRestApi\/invalid date range
+            elif (errore.startswith("122")):
+                raise e.DataFuoriGamma(f"""
+                    Una data è fuori dall'anno scolastico.
+                    OPPURE
+                    La data di inizio è successiva a quella di fine.
+                    Inizio: {inizio}
+                    Fine: {fine}
+                """)
+            else:
+                raise e.ErroreHTTP404(f"""
+                    {response.text}
+                    {response.json()}
+                """)
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
