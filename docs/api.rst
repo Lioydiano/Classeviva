@@ -233,7 +233,7 @@ Metodi
     
     Ritorno
 
-        - ``list[dict[str, Any]]`` - gli eventi dell'argenda nell'anno scolastico corrente
+        - ``list[dict[str, Any]]`` - gli eventi dell'agenda nell'anno scolastico corrente
     
     Eccezioni
 
