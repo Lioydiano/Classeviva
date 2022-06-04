@@ -93,6 +93,7 @@ Metodi
         - ``classeviva.eccezioni.PasswordNonValida`` - eccezione generata in caso di errore 422, dato da una password che non combacia con l'username
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore con altro codice HTTP
 
+
     - ``await self.documenti()`` - restituisce i documenti dell'utente [5]_
 
     .. code-block:: python
@@ -106,6 +107,7 @@ Metodi
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
+
 
     - ``await self.controlla_documento(documento: str)`` - controlla se il documento è presente
 
@@ -124,7 +126,8 @@ Metodi
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
-    
+
+
     - ``await self.assenze()`` - ottieni gli eventi in cui l'utente ha fatto assenza [7]_
 
     .. code-block:: python
@@ -138,7 +141,8 @@ Metodi
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
-    
+
+
     - ``await self.assenze_da(inizio: str=None)`` - ottieni gli eventi in cui l'utente ha fatto assenza a partire da una certa data
 
     .. code-block:: python
@@ -158,6 +162,7 @@ Metodi
         - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
         - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
+
 
     - ``await self.assenze_da_a(inizio: str=None, fine: str=None)`` - ottieni gli eventi compresi tra due date in cui l'utente ha fatto assenza
 
@@ -179,7 +184,8 @@ Metodi
         - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
         - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
-    
+
+
     - ``await self.agenda_da_a(inizio: str, fine: str)`` - ottieni gli eventi che compongono l'agenda dell'utente
 
     .. code-block:: python
@@ -201,6 +207,7 @@ Metodi
         - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
         - ``classeviva.eccezioni.ErroreHTTP404`` - eccezione generata in caso di errore HTTP 404
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP di altro tipo
+
 
     - ``await self.agenda_codice_da_a(codice: str, inizio: str, fine: str)`` - ottieni gli eventi dell'utente con un determinato codice evento
 
@@ -225,6 +232,7 @@ Metodi
         - ``classeviva.eccezioni.ErroreHTTP404`` - eccezione generata in caso di errore HTTP 404
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP di altro tipo
 
+
     - ``await self.agenda()`` - ottieni gli eventi dell'utente nell'anno scolastico corrente
 
     .. code-block:: python
@@ -241,6 +249,44 @@ Metodi
         - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
         - ``classeviva.eccezioni.ErroreHTTP404`` - eccezione generata in caso di errore HTTP 404
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP di altro tipo
+
+
+    - ``await self.didattica()`` - ottieni il materiale in didattica dell'anno scolastico corrente
+
+    .. code-block:: python
+
+        async def didattica(self) -> list[dict[str, Any]]:
+
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - il materiale in didattica dell'anno scolastico corrente [19]_
+    
+    Eccezioni
+    
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
+
+    - ``await self.didattica_elemento(contenuto: int)`` - ottieni un contenuto dal materiale in didattica
+
+    .. code-block:: python
+
+        async def didattica_elemento(self, contenuto: int) -> Any:
+    
+    Parametri
+
+        - ``contenuto: int``: codice del contenuto da ottenere
+
+    Ritorno
+
+        - ``Any`` - il contenuto richiesto
+
+        Avvertenze
+
+            - L'endpoint restituisce lo stesso contenuto di ``didattica()``
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
 
 Metodi magici [11]_
@@ -573,3 +619,4 @@ Note
 .. [16] L'API lo comunica tramite una risposta ``HTTP`` con codice ``422``
 .. [17] Ne è un esempio ``TokenNonPresente``, che pur rientrando nella descrizione di ``NonAccesso`` non ne è sottoclasse perché già parte di ``TokenErrore``
 .. [18] Alla versione ``0.1.0`` va fatto manualmente sollevando l'eccezione come descritto sotto
+.. [19] La struttura dei dizionari contenuti nella lista è complessa, può essere trovata `qui <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Didactics/didactics.md>`
