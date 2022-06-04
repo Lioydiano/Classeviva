@@ -323,8 +323,24 @@ class Utente(object):
                 {response.json()}
             """)
 
-    async def didattica_elemento(self, id: int) -> Any:
-        ...
+    async def didattica_elemento(self, contenuto: int) -> Any:
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.didattica.format(
+                self.id.removeprefix("S"),
+                contenuto
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
 
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
