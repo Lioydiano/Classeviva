@@ -324,6 +324,7 @@ class Utente(object):
             """)
 
     async def didattica_elemento(self, contenuto: int) -> Any:
+        # Sembra che ritorni lo stesso valore di didattica() indipendentemente da contenuto
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
