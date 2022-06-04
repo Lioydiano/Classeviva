@@ -2,7 +2,7 @@
 
 
 import setuptools
-VERSION = "0.2.0"
+VERSION = "0.2.0.dev0"
 setuptools.setup(
     name='Classeviva.py',
     packages=[
@@ -20,6 +20,7 @@ setuptools.setup(
     version=VERSION,
     license='MIT',
     requires=["requests"],
+    install_requires='requests>=2.27',
     description='Classeviva Python API wrapper',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
