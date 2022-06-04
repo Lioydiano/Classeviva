@@ -305,6 +305,12 @@ class Utente(object):
                 {response.json()}
             """)
 
+    async def didattica(self) -> Any:
+        ...
+
+    async def didattica_elemento(self, id: str) -> Any:
+        ...
+
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
         if (not hasattr(self, "_token")):

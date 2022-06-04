@@ -11,3 +11,5 @@ class Collegamenti:
     assenze_da_a: str = f"{base}/v1/students/{{}}/absences/details/{{}}/{{}}"
     agenda_da_a: str = f"{base}/v1/students/{{}}/agenda/all/{{}}/{{}}"
     agenda_codice_da_a: str = f"{base}/v1/students/{{}}/agenda/{{}}/{{}}/{{}}"
+    didattica: str = f"{base}/v1/students/{{}}/didactics"
+    didattica_elemento: str = f"{base}/v1/students/{{}}/didactics/item/{{}}"
