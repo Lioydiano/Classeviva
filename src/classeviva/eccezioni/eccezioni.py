@@ -38,6 +38,10 @@ class ErroreHTTP(Exception):
     ...
 
 
+class ErroreHTTP404(ErroreHTTP):
+    ...
+
+
 class DataErrore(Exception):
     """
     Errori legati alle date

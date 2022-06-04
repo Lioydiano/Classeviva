@@ -197,7 +197,7 @@ class Utente(object):
                 {response.json()}
             """)
 
-    async def agenda(self) -> Any:
+    async def agenda(self) -> list[dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
@@ -209,7 +209,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["agenda"]
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
@@ -217,7 +217,7 @@ class Utente(object):
                 {response.json()}
             """)
 
-    async def agenda_da_a(self, inizio: str=None, fine: str=None) -> Any:
+    async def agenda_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
         if (None in {inizio, fine}):
             return await self.agenda()
         v.valida_date(inizio, fine)
@@ -233,7 +233,38 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["agenda"]
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Agenda/eventCode.md
+    async def agenda_con_codice_da_a(self, codice: str, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
+        if (None in {inizio, fine}):
+            return await self.agenda()
+        v.valida_date(inizio, fine)
+
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.agenda_codice_da_a.format(
+                self.id.removeprefix("S"),
+                codice,
+                inizio.replace('-', ''), 
+                fine.replace('-', '')
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()["agenda"]
+        elif (response.status_code == 404):
+            raise e.ErroreHTTP404(f"""
+                {response.text}
+                {response.json()}
+            """)
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
