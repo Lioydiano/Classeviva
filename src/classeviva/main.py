@@ -242,7 +242,7 @@ class Utente(object):
             """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Agenda/eventCode.md
-    async def agenda_con_codice_da_a(self, codice: str, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
+    async def agenda_codice_da_a(self, codice: str, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
         if (None in {inizio, fine}):
             return await self.agenda()
         v.valida_date(inizio, fine)
