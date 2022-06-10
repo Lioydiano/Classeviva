@@ -344,7 +344,7 @@ class Utente(object):
             """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Noticeboard/noticeboard.md
-    async def bacheca(self) -> Any:
+    async def bacheca(self) -> list[dict[str, str | bool | dict[str, str | int]]]:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
@@ -354,7 +354,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["items"]
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
@@ -363,7 +363,7 @@ class Utente(object):
             """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Noticeboard/read.md
-    async def bacheca_leggi(self, codice: str, id_: int) -> Any:
+    async def bacheca_leggi(self, codice: str, id_: int) -> dict[str, dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.post(
@@ -383,7 +383,7 @@ class Utente(object):
                 {response.json()}
             """)
 
-    async def bacheca_allega(self, codice: str, id_: int) -> Any:
+    async def bacheca_allega(self, codice: str, id_: int) -> bytes:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
@@ -395,6 +395,8 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
+            # Sembra che gli allegati siano quasi esclusivamente .pdf, ma non essendo TUTTI .pdf la funzione ritorna un oggetto bytes
+            # TODO: per la versione 4.1.0 introdurre un metodo per codificare direttamente i bytes in un file con lo stesso nome dell'allegato di Classeviva
             return response.content
         else:
             raise e.ErroreHTTP(f"""
