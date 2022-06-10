@@ -13,3 +13,6 @@ class Collegamenti:
     agenda_codice_da_a: str = f"{base}/v1/students/{{}}/agenda/{{}}/{{}}/{{}}"
     didattica: str = f"{base}/v1/students/{{}}/didactics"
     didattica_elemento: str = f"{base}/v1/students/{{}}/didactics/item/{{}}"
+    bacheca: str = f"{base}/v1/students/{{}}/noticeboard"
+    bacheca_leggi: str = f"{base}/v1/students/{{}}/noticeboard/read/{{}}/{{}}/101"
+    bacheca_allega: str = f"{base}/v1/students/{{}}/noticeboard/attach/{{}}/{{}}/101"

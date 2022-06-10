@@ -343,6 +343,64 @@ class Utente(object):
                 {response.json()}
             """)
 
+    async def bacheca(self) -> Any:
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.bacheca.format(
+                self.id.removeprefix("S")
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    async def bacheca_leggi(self, codice: str, id_: int) -> Any:
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.bacheca_leggi.format(
+                self.id.removeprefix("S"),
+                codice,
+                id_
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    async def bacheca_allega(self, codice: str, id_: int) -> Any:
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.post(
+            c.Collegamenti.bacheca_allega.format(
+                self.id.removeprefix("S"),
+                codice,
+                id_
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
         if (not hasattr(self, "_token")):
