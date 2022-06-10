@@ -405,6 +405,76 @@ class Utente(object):
                 {response.json()}
             """)
 
+    async def lezioni(self) -> Any:
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.lezioni.format(
+                self.id.removeprefix("S")
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+    
+    async def lezioni_giorno(self, giorno: str=None) -> Any:
+        if (giorno is None):
+            return await self.lezioni()
+        v.valida_date(giorno)
+        
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.lezioni_giorno.format(
+                self.id.removeprefix("S"),
+                giorno
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+    
+    async def lezioni_da_a(self, inizio: str, fine: str) -> Any:
+        if (None in {inizio, fine}):
+            if (inizio is None and fine is None):
+                return await self.lezioni()
+            elif (inizio is None):
+                return await self.lezioni_da_a(v.data_inizio_anno(), fine)
+            elif (fine is None):
+                return await self.lezioni_da_a(inizio, v.data_fine_anno_o_oggi())
+        v.valida_date(inizio, fine)
+
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.lezioni_da_a.format(
+                self.id.removeprefix("S"),
+                inizio,
+                fine
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
         if (not hasattr(self, "_token")):

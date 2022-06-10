@@ -16,3 +16,6 @@ class Collegamenti:
     bacheca: str = f"{base}/v1/students/{{}}/noticeboard"
     bacheca_leggi: str = f"{base}/v1/students/{{}}/noticeboard/read/{{}}/{{}}/101"
     bacheca_allega: str = f"{base}/v1/students/{{}}/noticeboard/attach/{{}}/{{}}/101"
+    lezioni: str = f"{base}/v1/students/{{}}/lessons/today"
+    lezioni_giorno: str = f"{base}/v1/students/{{}}/lessons/{{}}"
+    lezioni_da_a: str = f"{base}/v1/students/{{}}/lessons/{{}}/{{}}"
