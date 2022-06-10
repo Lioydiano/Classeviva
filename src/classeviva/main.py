@@ -433,7 +433,7 @@ class Utente(object):
         response = self._sessione.get(
             c.Collegamenti.lezioni_giorno.format(
                 self.id.removeprefix("S"),
-                giorno
+                giorno.replace('-', '')
             ),
             headers=self.__intestazione()
         )
@@ -461,8 +461,8 @@ class Utente(object):
         response = self._sessione.get(
             c.Collegamenti.lezioni_da_a.format(
                 self.id.removeprefix("S"),
-                inizio,
-                fine
+                inizio.replace('-', ''),
+                fine.replace('-', '')
             ),
             headers=self.__intestazione()
         )
