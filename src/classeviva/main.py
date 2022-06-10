@@ -364,7 +364,7 @@ class Utente(object):
     async def bacheca_leggi(self, codice: str, id_: int) -> Any:
         if (not self.connesso):
             await self.accedi()
-        response = self._sessione.get(
+        response = self._sessione.post(
             c.Collegamenti.bacheca_leggi.format(
                 self.id.removeprefix("S"),
                 codice,
@@ -384,7 +384,7 @@ class Utente(object):
     async def bacheca_allega(self, codice: str, id_: int) -> Any:
         if (not self.connesso):
             await self.accedi()
-        response = self._sessione.post(
+        response = self._sessione.get(
             c.Collegamenti.bacheca_allega.format(
                 self.id.removeprefix("S"),
                 codice,
