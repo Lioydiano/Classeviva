@@ -363,7 +363,7 @@ class Utente(object):
             """)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Noticeboard/read.md
-    async def bacheca_leggi(self, codice: str, id_: int) -> dict[str, dict[str, Any]]:
+    async def bacheca_leggi(self, codice: int, id_: int) -> dict[str, dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.post(
@@ -383,7 +383,7 @@ class Utente(object):
                 {response.json()}
             """)
 
-    async def bacheca_allega(self, codice: str, id_: int) -> bytes:
+    async def bacheca_allega(self, codice: int, id_: int) -> bytes:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
@@ -404,6 +404,7 @@ class Utente(object):
                 {response.text}
                 {response.json()}
             """)
+    bacheca_allegato = bacheca_allega
 
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()

@@ -283,10 +283,66 @@ Metodi
         Avvertenze
 
             - L'endpoint restituisce lo stesso contenuto di ``didattica()``
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+    
+    - ``await self.bacheca()`` - ottieni il materiale in bacheca
+
+    .. code-block:: python
+
+        async def bacheca(self) -> list[dict[str, str | bool | dict[str, str | int]]]:
+    
+    Ritorno
+
+        - ``list[dict[str, str | bool | dict[str, str | int]]]`` - il materiale in bacheca
+    
+    Eccezioni
+    
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+    
+    - ``await self.bacheca_leggi(contenuto: int)`` - ottieni un contenuto dal materiale in bacheca
+
+    .. code-block:: python
+
+        async def bacheca_leggi(self, codice: int, id_: int) -> dict[str, dict[str, Any]]:
+    
+    Parametri
+
+        - ``codice: int``: codice dell'evento (alla voce ``evtCode``)
+        - ``id_: int``: id del contenuto da ottenere (alla voce ``pubId``)
+    
+    Ritorno
+
+        - ``dict[str, dict[str, Any]]`` - il contenuto richiesto
     
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+    
+    - ``await self.bacheca_allega(codice: int, id_: int)`` - ottieni un allegato
+
+    .. code-block:: python
+
+        async def bacheca_allega(self, codice: int, id_: int) -> bytes:
+    
+    Parametri
+
+        - ``codice: int``: codice dell'evento (alla voce ``evtCode``)
+        - ``id_: int``: id del contenuto da ottenere (alla voce ``pubId``)
+    
+    Ritorno
+
+        - ``bytes`` - il contenuto richiesto in formato binario
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+    
+    Alias
+
+        - ``bacheca_allegato`` - alias per ``bacheca_allega``
 
 
 Metodi magici [11]_
