@@ -343,6 +343,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Noticeboard/noticeboard.md
     async def bacheca(self) -> Any:
         if (not self.connesso):
             await self.accedi()
@@ -361,6 +362,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Noticeboard/read.md
     async def bacheca_leggi(self, codice: str, id_: int) -> Any:
         if (not self.connesso):
             await self.accedi()
@@ -393,7 +395,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.content
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
