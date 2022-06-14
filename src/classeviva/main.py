@@ -396,7 +396,7 @@ class Utente(object):
         )
         if (response.status_code == 200):
             # Sembra che gli allegati siano quasi esclusivamente .pdf, ma non essendo TUTTI .pdf la funzione ritorna un oggetto bytes
-            # TODO: per la versione 4.1.0 introdurre un metodo per codificare direttamente i bytes in un file con lo stesso nome dell'allegato di Classeviva
+            # TODO: per la versione 0.4.1 introdurre un metodo per codificare direttamente i bytes in un file con lo stesso nome dell'allegato di Classeviva
             return response.content
         else:
             raise e.ErroreHTTP(f"""
@@ -406,7 +406,8 @@ class Utente(object):
             """)
     bacheca_allegato = bacheca_allega
 
-    async def lezioni(self) -> Any:
+    async def lezioni(self) -> list[dict[str, Any]]:
+        # Sembra che ritorni sempre una lista vuota
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
@@ -416,7 +417,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["lessons"]
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
