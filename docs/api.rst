@@ -343,6 +343,16 @@ Metodi
     Alias
 
         - ``bacheca_allegato`` - alias per ``bacheca_allega``
+    
+    - ``await self.lezioni()`` - ottieni tutte le lezioni dell'anno
+
+    .. code-block:: python
+
+        async def lezioni(self) -> list[dict[str, Any]]:
+    
+    Avvertenze
+
+        - L'endpoint restituisce ``{"lessons": []}`` in ogni caso
 
     - ``await self.lezioni_giorno(giorno: str)`` - ottieni le lezioni del giorno
 
@@ -354,6 +364,36 @@ Metodi
 
         - ``giorno: str``: giorno di cui si richiede la lezione, in formato ``YYYY-MM-DD``
 
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - le lezioni del giorno richiesto [20]_
+    
+    Eccezioni
+    
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
+    - ``await self.lezioni_da_a(inizio: str, fine: str)`` - ottieni le lezioni in un range di date
+
+    .. code-block:: python
+
+        async def lezioni_da_a(self, inizio: str, fine: str) -> list[dict[str, Any]]:
+    
+    Parametri
+    
+        - ``inizio: str``: data di inizio, in formato ``YYYY-MM-DD``
+        - ``fine: str``: data di fine, in formato ``YYYY-MM-DD``
+    
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - le lezioni del range richiesto [20]_
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
 
 Metodi magici [11]_
@@ -687,3 +727,4 @@ Note
 .. [17] Ne è un esempio ``TokenNonPresente``, che pur rientrando nella descrizione di ``NonAccesso`` non ne è sottoclasse perché già parte di ``TokenErrore``
 .. [18] Alla versione ``0.1.0`` va fatto manualmente sollevando l'eccezione come descritto sotto
 .. [19] La struttura dei dizionari contenuti nella lista è complessa, può essere trovata `qui <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Didactics/didactics.md>`
+.. [20] Si veda `la documentazione https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Lessons/lessons.md`_
