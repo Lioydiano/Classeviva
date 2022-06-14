@@ -404,6 +404,7 @@ class Utente(object):
                 {response.text}
                 {response.json()}
             """)
+    bacheca_allegato = bacheca_allega
 
     async def lezioni(self) -> Any:
         if (not self.connesso):
@@ -423,7 +424,7 @@ class Utente(object):
                 {response.json()}
             """)
     
-    async def lezioni_giorno(self, giorno: str=None) -> Any:
+    async def lezioni_giorno(self, giorno: str=None) -> list[dict[str, Any]]:
         if (giorno is None):
             return await self.lezioni()
         v.valida_date(giorno)
@@ -438,7 +439,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["lessons"]
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}
@@ -446,7 +447,7 @@ class Utente(object):
                 {response.json()}
             """)
     
-    async def lezioni_da_a(self, inizio: str, fine: str) -> Any:
+    async def lezioni_da_a(self, inizio: str, fine: str) -> list[dict[str, Any]]:
         if (None in {inizio, fine}):
             if (inizio is None and fine is None):
                 return await self.lezioni()
@@ -467,7 +468,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            return response.json()
+            return response.json()["lessons"]
         else:
             raise e.ErroreHTTP(f"""
                 Richiesta non corretta, codice {response.status_code}

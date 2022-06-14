@@ -344,6 +344,17 @@ Metodi
 
         - ``bacheca_allegato`` - alias per ``bacheca_allega``
 
+    - ``await self.lezioni_giorno(giorno: str)`` - ottieni le lezioni del giorno
+
+    .. code-block:: python
+
+        async def lezioni_giorno(self, giorno: str=None) -> Any:
+    
+    Parametri
+
+        - ``giorno: str``: giorno di cui si richiede la lezione, in formato ``YYYY-MM-DD``
+
+
 
 Metodi magici [11]_
 
