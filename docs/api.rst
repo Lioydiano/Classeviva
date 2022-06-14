@@ -726,5 +726,5 @@ Note
 .. [16] L'API lo comunica tramite una risposta ``HTTP`` con codice ``422``
 .. [17] Ne è un esempio ``TokenNonPresente``, che pur rientrando nella descrizione di ``NonAccesso`` non ne è sottoclasse perché già parte di ``TokenErrore``
 .. [18] Alla versione ``0.1.0`` va fatto manualmente sollevando l'eccezione come descritto sotto
-.. [19] La struttura dei dizionari contenuti nella lista è complessa, può essere trovata `qui <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Didactics/didactics.md>`
-.. [20] Si veda `la documentazione https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Lessons/lessons.md`_
+.. [19] La struttura dei dizionari contenuti nella lista è complessa, può essere trovata `qui <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Didactics/didactics.md>`_
+.. [20] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Lessons/lessons.md>`_
