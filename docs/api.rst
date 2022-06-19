@@ -394,6 +394,20 @@ Metodi
         - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
         - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+    
+    - ``await self.calendario()`` - ottieni il calendario [21]_
+
+    .. code-block:: python
+
+        async def calendario(self) -> list[dict[str, str | int]]:
+    
+    Ritorno
+
+        - ``list[dict[str, str | int]]`` - il calendario [21]_
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
 
 Metodi magici [11]_
@@ -728,3 +742,4 @@ Note
 .. [18] Alla versione ``0.1.0`` va fatto manualmente sollevando l'eccezione come descritto sotto
 .. [19] La struttura dei dizionari contenuti nella lista è complessa, può essere trovata `qui <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Didactics/didactics.md>`_
 .. [20] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Lessons/lessons.md>`_
+.. [21] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Calendar/calendar.md>`_
