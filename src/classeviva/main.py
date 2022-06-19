@@ -496,6 +496,26 @@ class Utente(object):
                 {response.text}
                 {response.json()}
             """)
+    
+    async def libri(self) -> dict[str, int | str | dict[str, Any]]:
+        if (not self.connesso):
+            await self.accedi()
+    
+        response = self._sessione.get(
+            c.Collegamenti.libri.format(
+                self.id.removeprefix("S")
+            ),
+            headers=self.__intestazione()
+        )
+        
+        if (response.status_code == 200):
+            return response.json()["schoolbooks"][0]
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)        
 
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
