@@ -477,6 +477,26 @@ class Utente(object):
                 {response.json()}
             """)
 
+    async def calendario(self) -> list[dict[str, str | int]]:
+        if (not self.connesso):
+            await self.accedi()
+    
+        response = self._sessione.get(
+            c.Collegamenti.calendario.format(
+                self.id.removeprefix("S")
+            ),
+            headers=self.__intestazione()
+        )
+        
+        if (response.status_code == 200):
+            return response.json()["calendar"]
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
         if (not hasattr(self, "_token")):
