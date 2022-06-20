@@ -408,6 +408,34 @@ Metodi
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+    
+    - ``await self.libri()`` - ottieni i libri di testo adottati per l'anno scolastico corrente [22]_
+
+    .. code-block:: python
+
+        async def libri(self) -> dict[str, int | str | dict[str, Any]]:
+    
+    Ritorno
+
+        - ``dict[str, int | str | dict[str, Any]]`` - i libri di testo adottati per l'anno scolastico corrente [22]_
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+    
+    - ``await self.carta()`` - ottieni la carta dello studente [23]_
+
+    .. code-block:: python
+
+        async def carta(self) -> dict[str, str | int]:
+    
+    Ritorno
+
+        - ``dict[str, str | int]`` - la carta dello studente [23]_
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
 
 Metodi magici [11]_
@@ -743,3 +771,5 @@ Note
 .. [19] La struttura dei dizionari contenuti nella lista è complessa, può essere trovata `qui <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Didactics/didactics.md>`_
 .. [20] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Lessons/lessons.md>`_
 .. [21] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Calendar/calendar.md>`_
+.. [22] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Schoolbooks/schoolbooks.md>`_
+.. [23] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Card/card.md>`_
