@@ -541,10 +541,10 @@ class Utente(object):
     async def voti(self) -> list[dict[str, str | int | NoneType]]:
         ...
 
-    async def periodi(self) -> Any:
+    async def periodi(self) -> list[dict[str, str | int | bool | NoneType]]:
         ...
 
-    async def materie(self) -> Any:
+    async def materie(self) -> list[dict[str, str | int | list[dict[str, str]]]]:
         ...
 
     def __intestazione(self) -> dict[str, str]:
