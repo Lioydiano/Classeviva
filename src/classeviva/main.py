@@ -1,6 +1,7 @@
 from __future__ import annotations
 import asyncio
 from datetime import datetime, timezone
+from types import NoneType
 from typing import Any, Iterable
 from collections.abc import Iterable as IterableABC
 import requests
@@ -536,6 +537,15 @@ class Utente(object):
                 {response.text}
                 {response.json()}
             """)
+
+    async def voti(self) -> list[dict[str, str | int | NoneType]]:
+        ...
+
+    async def periodi(self) -> Any:
+        ...
+
+    async def materie(self) -> Any:
+        ...
 
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
