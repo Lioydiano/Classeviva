@@ -437,6 +437,48 @@ Metodi
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
+    - ``await self.voti()`` - ottieni le valutazioni dello studente [24]_
+
+    .. code-block:: python
+
+        async def voti(self) -> list[dict[str, str | int | NoneType]]:
+    
+    Ritorno
+
+        - ``list[dict[str, str | int | NoneType]]`` - le valutazioni dello studente [24]_
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+    
+    - ``await self.periodi()`` - ottieni la suddivisione in periodi dell'anno [25]_
+
+    .. code-block:: python
+
+        async def periodi(self) -> list[dict[str, str | int | bool | NoneType]]:
+    
+    Ritorno
+
+        - ``list[dict[str, str | int | bool | NoneType]]`` - la suddivisione in periodi dell'anno [25]_
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
+    - ``await self.materie()`` - ottieni le materie e gli insegnanti [26]_
+
+    .. code-block:: python
+
+        async def materie(self) -> list[dict[str, str | int | list[dict[str, str]]]]:
+    
+    Ritorno
+
+        - ``list[dict[str, str | int | list[dict[str, str]]]]`` - le materie e gli insegnanti [26]_
+    
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
 
 Metodi magici [11]_
 
@@ -773,3 +815,6 @@ Note
 .. [21] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Calendar/calendar.md>`_
 .. [22] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Schoolbooks/schoolbooks.md>`_
 .. [23] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Card/card.md>`_
+.. [24] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Grades/grades.md>`_
+.. [23] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Periods/periods.md>`_
+.. [23] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Subjects/subjects.md>`_
