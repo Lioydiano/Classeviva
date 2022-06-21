@@ -22,3 +22,6 @@ class Collegamenti:
     calendario: str = f"{base}/v1/students/{{}}/calendar/all"
     libri: str = f"{base}/v1/students/{{}}/schoolbooks"
     carta: str = f"{base}/v1/students/{{}}/card"
+    voti: str = f"{base}/v1/students/{{}}/grades"
+    periodi: str = f"{base}/v1/students/{{}}/periods"
+    materie: str = f"{base}/v1/students/{{}}/subjects"
