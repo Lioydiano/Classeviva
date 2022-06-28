@@ -642,12 +642,19 @@ class Utente(object):
 
         if (response.status_code == 200):
             return response.json()["event"]["evtText"]
-        else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+        elif (response.status_code == 404):
+            errore: str = response.json()["error"]
+            # 130:CvvRestApi\/invalid event-id
+            if (errore.startswith('130')):
+                raise e.ParametroNonValido(f"Nota con ID {id_} non trovata")
+            # 102:CvvRestApi\/wrong uri
+            elif (errore.startswith('102')):
+                raise e.CategoriaNonPresente(f"Categoria di nota {tipo} non trovata")
+        raise e.ErroreHTTP(f"""
+            Richiesta non corretta, codice {response.status_code}
+            {response.text}
+            {response.json()}
+        """)
 
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
