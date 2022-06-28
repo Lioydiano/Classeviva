@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import asyncio
 from datetime import datetime, timezone
 from types import NoneType
@@ -407,6 +408,7 @@ class Utente(object):
             """)
     bacheca_allegato = bacheca_allega
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Lessons/lessons.md
     async def lezioni(self) -> list[dict[str, Any]]:
         # Sembra che ritorni sempre una lista vuota
         if (not self.connesso):
@@ -478,6 +480,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Calendar/calendar.md
     async def calendario(self) -> list[dict[str, str | int]]:
         if (not self.connesso):
             await self.accedi()
@@ -497,7 +500,8 @@ class Utente(object):
                 {response.text}
                 {response.json()}
             """)
-    
+
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Schoolbooks/schoolbooks.md
     async def libri(self) -> dict[str, int | str | dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
@@ -517,7 +521,8 @@ class Utente(object):
                 {response.text}
                 {response.json()}
             """)
-    
+
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Card/card.md
     async def carta(self) -> dict[str, str | int]:
         if (not self.connesso):
             await self.accedi()
@@ -538,6 +543,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Grades/grades.md
     async def voti(self) -> list[dict[str, str | int | NoneType]]:
         if (not self.connesso):
             await self.accedi()
@@ -558,6 +564,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Periods/periods.md
     async def periodi(self) -> list[dict[str, str | int | bool | NoneType]]:
         if (not self.connesso):
             await self.accedi()
@@ -578,6 +585,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Subjects/subjects.md
     async def materie(self) -> list[dict[str, str | int | list[dict[str, str]]]]:
         if (not self.connesso):
             await self.accedi()
