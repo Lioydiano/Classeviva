@@ -25,3 +25,5 @@ class Collegamenti:
     voti: str = f"{base}/v1/students/{{}}/grades"
     periodi: str = f"{base}/v1/students/{{}}/periods"
     materie: str = f"{base}/v1/students/{{}}/subjects"
+    note: str = f"{base}/v1/students/{{}}/notes/all"
+    leggi_nota: str = f"{base}/v1/students/{{}}/notes/{{}}/read/{{}}"

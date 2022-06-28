@@ -606,6 +606,49 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Notes/all.md
+    async def note(self) -> dict[str, list[dict[str, str | int | bool]]]:
+        if (not self.connesso):
+            await self.accedi()
+        
+        response = self._sessione.get(
+            c.Collegamenti.note.format(
+                self.id.removeprefix("S")
+            ),
+            headers=self.__intestazione()
+        )
+        
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
+    async def leggi_nota(self, tipo: str, id_: int) -> str:
+        if (not self.connesso):
+            await self.accedi()
+
+        response = self._sessione.post(
+            c.Collegamenti.leggi_nota.format(
+                self.id.removeprefix("S"),
+                tipo,
+                id_
+            ),
+            headers=self.__intestazione()
+        )
+
+        if (response.status_code == 200):
+            return response.json()["event"]["evtText"]
+        else:
+            raise e.ErroreHTTP(f"""
+                Richiesta non corretta, codice {response.status_code}
+                {response.text}
+                {response.json()}
+            """)
+
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
         if (not hasattr(self, "_token")):
