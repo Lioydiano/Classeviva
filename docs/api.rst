@@ -479,6 +479,41 @@ Metodi
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
+    - ``await self.note()`` - ottieni le note dell'anno scolastico corrente [27]_
+
+    .. code-block:: python
+
+        async def note(self) -> dict[str, list[dict[str, str | int | bool]]]:
+    
+    Ritorno
+
+        - ``dict[str, list[dict[str, str | int | bool]]]`` - le note dell'anno scolastico corrente [27]_
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
+    - ``await self.leggi_nota(tipo: str, id_: int)`` - leggi la nota data categoria e ID [28]_
+
+    .. code-block:: python
+
+        async def leggi_nota(self, tipo: str, id_: int) -> str:
+
+    Parametri
+
+        - ``tipo: str``: categoria della nota [29]_
+        - ``id_: int``: ID della nota [30]_
+
+    Ritorno
+
+        - ``str`` - il testo della nota
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ParametroNonValido`` - se il campo ``id_`` non combacia con nessuna nota
+        - ``classeviva.eccezioni.CategoriaNonPresente`` - se il campo ``tipo`` non combacia con nessuna categoria
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP di diversa natura
+
 
 Metodi magici [11]_
 
@@ -768,6 +803,41 @@ Sottoclassi
         class ErroreHTTP404(ErroreHTTP):
             ...
 
+
+``ValoreNonValido``
+---------------------------
+Rappresenta tutti gli errori dovuti a valori forniti all'API non validi
+
+    .. code-block:: python
+
+        class ValoreNonValido(Exception):
+            """
+            Errori legati ai valori
+            """
+
+Sottoclassi
+
+    - ``classeviva.eccezioni.ParametroNonValido``
+
+    .. code-block:: python
+
+        class ParametroNonValido(ValoreNonValido):
+            """
+            Errori legati ai parametri
+            Sollevati quando l'URI esiste ma i parametri forniti causano un errore
+            """
+    
+    - ``classeviva.eccezioni.CategoriaNonPresente``
+
+    .. code-block:: python
+
+        class CategoriaNonPresente(ValoreNonValido):
+            """
+            Errori legati alle categorie
+            Sollevati quando l'URI non esiste perché un sotto-endpoint non viene trovato
+            """
+
+
 ``classeviva.variabili``
 ===========================
 ``classeviva.variabili`` è il modulo che contiene le costanti utili per evitare ridondanza nel codice
@@ -818,3 +888,5 @@ Note
 .. [24] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Grades/grades.md>`_
 .. [25] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Periods/periods.md>`_
 .. [26] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Subjects/subjects.md>`_
+.. [29] Le categorie sono "NTTE", "NTCL", "NTWN" e "NTST". I significati delle sigle non sono ancora chiari
+.. [30] L'ID si trova alla voce "evtId" di ogni dizionario contenuto nella lista di dizionari restituita dalla richiesta di note
