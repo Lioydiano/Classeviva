@@ -627,6 +627,7 @@ class Utente(object):
                 {response.json()}
             """)
 
+    # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Notes/read.md
     async def leggi_nota(self, tipo: str, id_: int) -> str:
         if (not self.connesso):
             await self.accedi()

@@ -888,5 +888,7 @@ Note
 .. [24] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Grades/grades.md>`_
 .. [25] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Periods/periods.md>`_
 .. [26] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Subjects/subjects.md>`_
+.. [27] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Notes/all.md>`_
+.. [28] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Notes/read.md>`_
 .. [29] Le categorie sono "NTTE", "NTCL", "NTWN" e "NTST". I significati delle sigle non sono ancora chiari
 .. [30] L'ID si trova alla voce "evtId" di ogni dizionario contenuto nella lista di dizionari restituita dalla richiesta di note
