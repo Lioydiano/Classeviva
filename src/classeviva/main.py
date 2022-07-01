@@ -82,7 +82,6 @@ class Utente(object):
             e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md
-    @a_connettente
     async def documenti(self) -> dict[str, list[dict[str, str]]]:
         response = self._sessione.post(
             c.Collegamenti.documenti.format(self._id),
