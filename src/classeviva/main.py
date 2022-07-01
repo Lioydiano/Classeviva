@@ -16,23 +16,11 @@ from .variabili import variabili as v
 class Utente(object):
     
     def __init__(self, id: str, password: str) -> None:
-        print("Inizializzazione utente...")
-        print("ID")
         self.id = id
         self._id = id.removeprefix("S")
-        print("Password")
         self.password = password
-        print("Sessione")
         self._sessione = requests.Session()
-        print("Dati")
         self._dati: dict = {}
-        # Decorazione dei metodi asincroni...
-        print("Decorazione dei metodi asincroni...")
-        membri = inspect.getmembers(self, inspect.iscoroutinefunction)
-        print(membri)
-        for nome, funzione in membri:
-            if (nome not in {"accedi"}): # ...ma non di "accedi"
-                setattr(Utente, nome, self.a_connettente(funzione))
 
     def __str__(self) -> str:
         return f"<oggetto classeviva.Utente a {id(self)}>"
@@ -57,15 +45,6 @@ class Utente(object):
             if (not self.connesso):
                 self()
             funzione(self, *args, **kwargs)
-        return involucro
-
-    # Decoratore che connette l'utente prima di eseguire la funzione asincrona se è necessario
-    def a_connettente(self, funzione):
-        # Il decoratore viene applicato ai metodi asincroni della classe
-        async def involucro(*args, **kwargs) -> None:
-            if (not self.connesso):
-                await self.accedi()
-            await funzione(self, *args, **kwargs)
         return involucro
 
     async def accedi(self) -> None:
