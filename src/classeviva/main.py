@@ -23,6 +23,7 @@ class Utente(object):
         self._dati: dict = {}
         # Decorazione dei metodi asincroni...
         membri = inspect.getmembers(self, inspect.iscoroutinefunction)
+        print(membri)
         for nome, funzione in membri:
             if (nome not in {"accedi"}): # ...ma non di "accedi"
                 setattr(Utente, nome, self.a_connettente(funzione))
@@ -43,6 +44,23 @@ class Utente(object):
         if (isinstance(other, Utente)):
             return (self._id == other._id and self.password == other.password)
         return False
+    
+    # Decoratore che connette l'utente prima di eseguire la funzione se è necessario
+    def connettente(self, funzione):
+        def involucro(*args, **kwargs) -> None:
+            if (not self.connesso):
+                self()
+            funzione(self, *args, **kwargs)
+        return involucro
+
+    # Decoratore che connette l'utente prima di eseguire la funzione asincrona se è necessario
+    def a_connettente(self, funzione):
+        # Il decoratore viene applicato ai metodi asincroni della classe
+        async def involucro(*args, **kwargs) -> None:
+            if (not self.connesso):
+                await self.accedi()
+            await funzione(self, *args, **kwargs)
+        return involucro
 
     async def accedi(self) -> None:
         if (self.connesso):
@@ -64,9 +82,8 @@ class Utente(object):
             e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md
+    @a_connettente
     async def documenti(self) -> dict[str, list[dict[str, str]]]:
-        if (not self.connesso):
-            await self.accedi()
         response = self._sessione.post(
             c.Collegamenti.documenti.format(self._id),
             headers=self.__intestazione()
@@ -529,23 +546,6 @@ class Utente(object):
             raise e.TokenNonPresente("Token non presente")
         intestazione["Z-Auth-Token"] = self._token
         return intestazione
-
-    # Decoratore che connette l'utente prima di eseguire la funzione se è necessario
-    def connettente(self, funzione):
-        def involucro(*args, **kwargs) -> None:
-            if (not self.connesso):
-                self()
-            funzione(self, *args, **kwargs)
-        return involucro
-
-    # Decoratore che connette l'utente prima di eseguire la funzione asincrona se è necessario
-    def a_connettente(self, funzione):
-        # Il decoratore viene applicato ai metodi asincroni della classe
-        async def involucro(*args, **kwargs) -> None:
-            if (not self.connesso):
-                await self.accedi()
-            await funzione(self, *args, **kwargs)
-        return involucro
 
     @property
     def biglietto_completo(self) -> dict[str, str]:
