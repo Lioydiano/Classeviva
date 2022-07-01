@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime, timezone
+import inspect
 from types import NoneType
 from typing import Any, Iterable
 from collections.abc import Iterable as IterableABC
@@ -532,6 +533,15 @@ class Utente(object):
             funzione(self, *args, **kwargs)
         return involucro
 
+    # Decoratore che connette l'utente prima di eseguire la funzione asincrona se è necessario
+    def a_connettente(self, funzione):
+        # Il decoratore viene applicato ai metodi asincroni della classe
+        async def involucro(*args, **kwargs) -> None:
+            if (not self.connesso):
+                await self.accedi()
+            await funzione(self, *args, **kwargs)
+        return involucro
+
     @property
     def biglietto_completo(self) -> dict[str, str]:
         response = self._sessione.get(
@@ -608,6 +618,11 @@ class Utente(object):
         elif (not self.connesso):
             raise e.TokenScaduto("Il token è scaduto")
         return self._token
+
+membri = inspect.getmembers(Utente, inspect.iscoroutinefunction(object))
+for nome, funzione in membri:
+    if (nome not in {"accedi"}):
+        setattr(Utente, nome, Utente.a_connettente(funzione))
 
 
 class ListaUtenti(set[Utente]):
