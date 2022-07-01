@@ -856,6 +856,12 @@ Sottoclassi
             """
 
 
+Funzioni
+---------------------------
+Funzioni utilizzate per sollevare eccezioni mirate
+
+- ``sollevaErroreHTTP(response: Response)`` - solleva un'eccezione di tipo ``classeviva.eccezioni.ErroreHTTP``, e lo fa aggiungendo tutte le informazioni ottenute dalla risposta dell'API, e scegliendo il tipo di eccezione a seconda del tipo di errore
+
 ``classeviva.variabili``
 ===========================
 ``classeviva.variabili`` è il modulo che contiene le costanti utili per evitare ridondanza nel codice
