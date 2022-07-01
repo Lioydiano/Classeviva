@@ -16,6 +16,7 @@ from .variabili import variabili as v
 class Utente(object):
     
     def __init__(self, id: str, password: str) -> None:
+        print("Inizializzazione utente...")
         self.id = id
         self._id = id.removeprefix("S")
         self.password = password
