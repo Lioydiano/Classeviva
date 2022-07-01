@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime, timezone
-import inspect
 from types import NoneType
 from typing import Any, Iterable
 from collections.abc import Iterable as IterableABC
@@ -411,9 +410,7 @@ class Utente(object):
             await self.accedi()
     
         response = self._sessione.get(
-            c.Collegamenti.libri.format(
-                self._id
-            ),
+            c.Collegamenti.libri.format(self._id),
             headers=self.__intestazione()
         )
         
@@ -443,9 +440,7 @@ class Utente(object):
             await self.accedi()
         
         response = self._sessione.get(
-            c.Collegamenti.voti.format(
-                self._id
-            ),
+            c.Collegamenti.voti.format(self._id),
             headers=self.__intestazione()
         )
         
@@ -475,9 +470,7 @@ class Utente(object):
             await self.accedi()
         
         response = self._sessione.get(
-            c.Collegamenti.materie.format(
-                self._id
-            ),
+            c.Collegamenti.materie.format(self._id),
             headers=self.__intestazione()
         )
         
