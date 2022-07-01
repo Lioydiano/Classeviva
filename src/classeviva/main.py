@@ -620,7 +620,7 @@ class Utente(object):
         return self._token
 
 membri = inspect.getmembers(Utente, inspect.iscoroutinefunction(object))
-utente = Utente()
+utente = Utente("", "")
 for nome, funzione in membri:
     if (nome not in {"accedi"}):
         setattr(Utente, nome, Utente.a_connettente(utente, funzione))
