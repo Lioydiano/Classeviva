@@ -1,3 +1,6 @@
+from requests import Response
+
+
 class TokenErrore(Exception):
     ...
 
@@ -81,3 +84,21 @@ class CategoriaNonPresente(ValoreNonValido):
     Errori legati alle categorie
     Sollevati quando l'URI non esiste perché un sotto-endpoint non viene trovato
     """
+
+
+def sollevaErroreHTTP(response: Response) -> None:
+    if isinstance(response, Response):
+        try:
+            if (response.status_code == 404):
+                raise ErroreHTTP404(f"""
+                    Testo: {response.text}
+                    Risposta: {response.json()}
+                """)
+            raise ErroreHTTP(f"""
+                    Richiesta non corretta 
+                    Codice: {response.status_code}
+                    Testo: {response.text}
+                    Risposta: {response.json()}
+                """)
+        except AttributeError:
+            raise ErroreHTTP("Richiesta non corretta")

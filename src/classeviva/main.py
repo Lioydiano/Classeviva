@@ -55,11 +55,7 @@ class Utente(object):
         elif (response.status_code == 422):
             raise e.PasswordNonValida(f"La password di {self} non combacia")
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md
     async def documenti(self) -> dict[str, list[dict[str, str]]]:
@@ -72,11 +68,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/check%20document.md
     async def controlla_documento(self, documento: str) -> bool:
@@ -89,11 +81,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["document"]["available"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/absences.md
     async def assenze(self) -> list[dict[str, Any]]:
@@ -106,11 +94,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["events"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/from.md
     async def assenze_da(self, inizio: str=None) -> list[dict[str, Any]]:
@@ -141,17 +125,9 @@ class Utente(object):
                     Inizio: {inizio}
                 """)
             else:
-                raise e.ErroreHTTP(f"""
-                    Richiesta non corretta, codice {response.status_code}
-                    {response.text}
-                    {response.json()}
-                """)
+                e.sollevaErroreHTTP(response=response)
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/from_to.md
     async def assenze_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
@@ -193,11 +169,7 @@ class Utente(object):
                     {response.json()}
                 """)
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     async def agenda(self) -> list[dict[str, Any]]:
         if (not self.connesso):
@@ -213,11 +185,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["agenda"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Agenda/from_to.md
     async def agenda_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
@@ -251,17 +219,8 @@ class Utente(object):
                     Inizio: {inizio}
                     Fine: {fine}
                 """)
-            else:
-                raise e.ErroreHTTP404(f"""
-                    {response.text}
-                    {response.json()}
-                """)
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Agenda/eventCode.md
     async def agenda_codice_da_a(self, codice: str, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
@@ -273,8 +232,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.agenda_codice_da_a.format(
-                self._id,
-                codice,
+                self._id, codice,
                 inizio.replace('-', ''), 
                 fine.replace('-', '')
             ),
@@ -302,99 +260,64 @@ class Utente(object):
                     {response.json()}
                 """)
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     async def didattica(self) -> list[dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.didattica.format(
-                self._id
-            ),
+            c.Collegamenti.didattica.format(self._id),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
             return response.json()["didacticts"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     async def didattica_elemento(self, contenuto: int) -> Any:
         # Sembra che ritorni lo stesso valore di didattica() indipendentemente da contenuto
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.didattica.format(
-                self._id,
-                contenuto
-            ),
+            c.Collegamenti.didattica.format(self._id, contenuto),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
             return response.json()
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Noticeboard/noticeboard.md
     async def bacheca(self) -> list[dict[str, str | bool | dict[str, str | int]]]:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.bacheca.format(
-                self._id
-            ),
+            c.Collegamenti.bacheca.format(self._id),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
             return response.json()["items"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Noticeboard/read.md
     async def bacheca_leggi(self, codice: str, id_: int) -> dict[str, dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.post(
-            c.Collegamenti.bacheca_leggi.format(
-                self._id,
-                codice,
-                id_
-            ),
+            c.Collegamenti.bacheca_leggi.format(self._id, codice, id_),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
             return response.json()
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     async def bacheca_allega(self, codice: str, id_: int) -> bytes:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.bacheca_allega.format(
-                self._id,
-                codice,
-                id_
-            ),
+            c.Collegamenti.bacheca_allega.format(self._id, codice, id_),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
@@ -402,11 +325,7 @@ class Utente(object):
             # TODO: per la versione 0.4.1 introdurre un metodo per codificare direttamente i bytes in un file con lo stesso nome dell'allegato di Classeviva
             return response.content
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
     bacheca_allegato = bacheca_allega
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Lessons/lessons.md
@@ -415,19 +334,13 @@ class Utente(object):
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.lezioni.format(
-                self._id
-            ),
+            c.Collegamenti.lezioni.format(self._id),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
             return response.json()["lessons"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
     
     async def lezioni_giorno(self, giorno: str=None) -> list[dict[str, Any]]:
         if (giorno is None):
@@ -437,20 +350,13 @@ class Utente(object):
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.lezioni_giorno.format(
-                self._id,
-                giorno.replace('-', '')
-            ),
+            c.Collegamenti.lezioni_giorno.format(self._id, giorno.replace('-', '')),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
             return response.json()["lessons"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
     
     async def lezioni_da_a(self, inizio: str, fine: str) -> list[dict[str, Any]]:
         if (None in {inizio, fine}):
@@ -475,11 +381,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["lessons"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Calendar/calendar.md
     async def calendario(self) -> list[dict[str, str | int]]:
@@ -487,20 +389,14 @@ class Utente(object):
             await self.accedi()
     
         response = self._sessione.get(
-            c.Collegamenti.calendario.format(
-                self._id
-            ),
+            c.Collegamenti.calendario.format(self._id),
             headers=self.__intestazione()
         )
         
         if (response.status_code == 200):
             return response.json()["calendar"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Schoolbooks/schoolbooks.md
     async def libri(self) -> dict[str, int | str | dict[str, Any]]:
@@ -517,11 +413,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["schoolbooks"][0]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Card/card.md
     async def carta(self) -> dict[str, str | int]:
@@ -529,20 +421,14 @@ class Utente(object):
             await self.accedi()
     
         response = self._sessione.get(
-            c.Collegamenti.carta.format(
-                self._id
-            ),
+            c.Collegamenti.carta.format(self._id),
             headers=self.__intestazione()
         )
         
         if (response.status_code == 200):
             return response.json()["card"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Grades/grades.md
     async def voti(self) -> list[dict[str, str | int | NoneType]]:
@@ -559,11 +445,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["grades"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Periods/periods.md
     async def periodi(self) -> list[dict[str, str | int | bool | NoneType]]:
@@ -571,20 +453,14 @@ class Utente(object):
             await self.accedi()
         
         response = self._sessione.get(
-            c.Collegamenti.periodi.format(
-                self._id
-            ),
+            c.Collegamenti.periodi.format(self._id),
             headers=self.__intestazione()
         )
         
         if (response.status_code == 200):
             return response.json()["periods"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Subjects/subjects.md
     async def materie(self) -> list[dict[str, str | int | list[dict[str, str]]]]:
@@ -601,11 +477,7 @@ class Utente(object):
         if (response.status_code == 200):
             return response.json()["subjects"]
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Notes/all.md
     async def note(self) -> dict[str, list[dict[str, str | int | bool]]]:
@@ -613,20 +485,14 @@ class Utente(object):
             await self.accedi()
         
         response = self._sessione.get(
-            c.Collegamenti.note.format(
-                self._id
-            ),
+            c.Collegamenti.note.format(self._id),
             headers=self.__intestazione()
         )
         
         if (response.status_code == 200):
             return response.json()
         else:
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
 
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Notes/read.md
     async def leggi_nota(self, tipo: str, id_: int) -> str:
@@ -634,11 +500,7 @@ class Utente(object):
             await self.accedi()
 
         response = self._sessione.post(
-            c.Collegamenti.leggi_nota.format(
-                self._id,
-                tipo,
-                id_
-            ),
+            c.Collegamenti.leggi_nota.format(self._id, tipo, id_),
             headers=self.__intestazione()
         )
 
@@ -652,11 +514,8 @@ class Utente(object):
             # 102:CvvRestApi\/wrong uri
             elif (errore.startswith('102')):
                 raise e.CategoriaNonPresente(f"Categoria di nota {tipo} non trovata")
-        raise e.ErroreHTTP(f"""
-            Richiesta non corretta, codice {response.status_code}
-            {response.text}
-            {response.json()}
-        """)
+        else:
+            e.sollevaErroreHTTP(response=response)
 
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
@@ -680,11 +539,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code != 200):
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
         try:
             return response.json()
         except Exception as e_:
@@ -704,11 +559,7 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code != 200):
-            raise e.ErroreHTTP(f"""
-                Richiesta non corretta, codice {response.status_code}
-                {response.text}
-                {response.json()}
-            """)
+            e.sollevaErroreHTTP(response=response)
         try:
             return response.json()["status"]["remains"]
         except Exception as e_:
