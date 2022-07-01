@@ -23,7 +23,9 @@ class Utente(object):
         self._sessione = requests.Session()
         self._dati: dict = {}
         # Decorazione dei metodi asincroni...
+        print("Decorazione dei metodi asincroni...")
         membri = inspect.getmembers(self, inspect.iscoroutinefunction)
+        print("Decorazione dei metodi asincroni...")
         print(membri)
         for nome, funzione in membri:
             if (nome not in {"accedi"}): # ...ma non di "accedi"
