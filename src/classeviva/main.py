@@ -35,7 +35,7 @@ class Utente(object):
 
     def __eq__(self, other) -> bool:
         if (isinstance(other, Utente)):
-            return (self.id == other.id and self.password == other.password)
+            return (self._id == other._id and self.password == other.password)
         return False
 
     async def accedi(self) -> None:
@@ -692,7 +692,10 @@ class Utente(object):
 
     @property
     def biglietto(self) -> str:
-        return self.biglietto_completo["ticket"]
+        try:
+            return self.biglietto_completo["ticket"]
+        except Exception as e_:
+            print(e_)
 
     @property
     def secondi_rimasti(self) -> int:
@@ -787,7 +790,7 @@ class ListaUtenti(set[Utente]):
         return False
 
     def __riduci(self) -> None:
-        for utente in self:
+        for utente in self.copy():
             copia = self.copy()
             copia.remove(utente)
             for utentino in copia:
