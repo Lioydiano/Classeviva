@@ -16,6 +16,7 @@ class Utente(object):
     
     def __init__(self, id: str, password: str) -> None:
         self.id = id
+        self._id = id.removeprefix("S")
         self.password = password
         self._sessione = requests.Session()
         self._dati: dict = {}
@@ -65,7 +66,7 @@ class Utente(object):
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.post(
-            c.Collegamenti.documenti.format(self.id.removeprefix("S")),
+            c.Collegamenti.documenti.format(self._id),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
@@ -82,7 +83,7 @@ class Utente(object):
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.post(
-            c.Collegamenti.controllo_documento.format(self.id.removeprefix("S"), documento),
+            c.Collegamenti.controllo_documento.format(self._id, documento),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
@@ -99,7 +100,7 @@ class Utente(object):
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.assenze.format(self.id.removeprefix("S")),
+            c.Collegamenti.assenze.format(self._id),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
@@ -121,7 +122,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.assenze_da.format(
-                self.id.removeprefix("S"), 
+                self._id, 
                 inizio.replace("-", "")
             ),
             headers=self.__intestazione()
@@ -164,7 +165,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.assenze_da.format(
-                self.id.removeprefix("S"), 
+                self._id, 
                 inizio.replace('-', ''), 
                 fine.replace('-', '')
             ),
@@ -203,7 +204,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.agenda_da_a.format(
-                self.id.removeprefix("S"),
+                self._id,
                 v.data_inizio_anno(),
                 v.data_fine_anno()
             ),
@@ -228,7 +229,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.agenda_da_a.format(
-                self.id.removeprefix("S"),
+                self._id,
                 inizio.replace('-', ''), 
                 fine.replace('-', '')
             ),
@@ -272,7 +273,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.agenda_codice_da_a.format(
-                self.id.removeprefix("S"),
+                self._id,
                 codice,
                 inizio.replace('-', ''), 
                 fine.replace('-', '')
@@ -312,7 +313,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.didattica.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -331,7 +332,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.didattica.format(
-                self.id.removeprefix("S"),
+                self._id,
                 contenuto
             ),
             headers=self.__intestazione()
@@ -351,7 +352,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.bacheca.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -370,7 +371,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.post(
             c.Collegamenti.bacheca_leggi.format(
-                self.id.removeprefix("S"),
+                self._id,
                 codice,
                 id_
             ),
@@ -390,7 +391,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.bacheca_allega.format(
-                self.id.removeprefix("S"),
+                self._id,
                 codice,
                 id_
             ),
@@ -415,7 +416,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.lezioni.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -437,7 +438,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.lezioni_giorno.format(
-                self.id.removeprefix("S"),
+                self._id,
                 giorno.replace('-', '')
             ),
             headers=self.__intestazione()
@@ -465,7 +466,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.lezioni_da_a.format(
-                self.id.removeprefix("S"),
+                self._id,
                 inizio.replace('-', ''),
                 fine.replace('-', '')
             ),
@@ -487,7 +488,7 @@ class Utente(object):
     
         response = self._sessione.get(
             c.Collegamenti.calendario.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -508,7 +509,7 @@ class Utente(object):
     
         response = self._sessione.get(
             c.Collegamenti.libri.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -529,7 +530,7 @@ class Utente(object):
     
         response = self._sessione.get(
             c.Collegamenti.carta.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -550,7 +551,7 @@ class Utente(object):
         
         response = self._sessione.get(
             c.Collegamenti.voti.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -571,7 +572,7 @@ class Utente(object):
         
         response = self._sessione.get(
             c.Collegamenti.periodi.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -592,7 +593,7 @@ class Utente(object):
         
         response = self._sessione.get(
             c.Collegamenti.materie.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -613,7 +614,7 @@ class Utente(object):
         
         response = self._sessione.get(
             c.Collegamenti.note.format(
-                self.id.removeprefix("S")
+                self._id
             ),
             headers=self.__intestazione()
         )
@@ -634,7 +635,7 @@ class Utente(object):
 
         response = self._sessione.post(
             c.Collegamenti.leggi_nota.format(
-                self.id.removeprefix("S"),
+                self._id,
                 tipo,
                 id_
             ),
@@ -729,9 +730,8 @@ class Utente(object):
     def dati(self) -> dict[str, str]:
         try:
             return {
-                "id": self._dati["ident"],
-                "nome": self._dati["firstName"],
-                "cognome": self._dati["lastName"]
+                chiave: valore for chiave, valore in self._dati.items()
+                if chiave in {"ident", "firstName", "lastName"}
             }
         except KeyError:
             raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
@@ -741,9 +741,8 @@ class Utente(object):
         documenti_ = asyncio.run(self.documenti())
         try:
             return [{
-                "descrizione": documento_["desc"],
-                "conferma": documento_["confirmLink"],
-                "lettura": documento_["viewLink"]
+                chiave: valore for chiave, valore in documento_.items() 
+                if chiave in {"desc", "confirmLink", "viewLink"}
             } for documento_ in documenti_["schoolReports"]]
         except KeyError:
             raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
