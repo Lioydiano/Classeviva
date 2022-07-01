@@ -21,6 +21,11 @@ class Utente(object):
         self.password = password
         self._sessione = requests.Session()
         self._dati: dict = {}
+        # Decorazione dei metodi asincroni...
+        membri = inspect.getmembers(self, inspect.iscoroutinefunction)
+        for nome, funzione in membri:
+            if (nome not in {"accedi"}): # ...ma non di "accedi"
+                setattr(Utente, nome, self.a_connettente(funzione))
 
     def __str__(self) -> str:
         return f"<oggetto classeviva.Utente a {id(self)}>"
@@ -618,12 +623,6 @@ class Utente(object):
         elif (not self.connesso):
             raise e.TokenScaduto("Il token è scaduto")
         return self._token
-
-membri = inspect.getmembers(Utente, inspect.iscoroutinefunction(object))
-utente = Utente("S8733880I", "Mattiamarchese2006?")
-for nome, funzione in membri:
-    if (nome not in {"accedi"}):
-        setattr(Utente, nome, Utente.a_connettente(utente, funzione))
 
 
 class ListaUtenti(set[Utente]):
