@@ -17,15 +17,18 @@ class Utente(object):
     
     def __init__(self, id: str, password: str) -> None:
         print("Inizializzazione utente...")
+        print("ID")
         self.id = id
         self._id = id.removeprefix("S")
+        print("Password")
         self.password = password
+        print("Sessione")
         self._sessione = requests.Session()
+        print("Dati")
         self._dati: dict = {}
         # Decorazione dei metodi asincroni...
         print("Decorazione dei metodi asincroni...")
         membri = inspect.getmembers(self, inspect.iscoroutinefunction)
-        print("Decorazione dei metodi asincroni...")
         print(membri)
         for nome, funzione in membri:
             if (nome not in {"accedi"}): # ...ma non di "accedi"
