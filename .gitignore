@@ -132,4 +132,5 @@ dmypy.json
 test.py
 uploader.py
 test.pdf
+*.pdf
 .vscode/
