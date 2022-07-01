@@ -66,7 +66,6 @@ Proprietà
         - ``stato: bool`` - comunica se la sessione è ancora attiva
         - ``connesso: bool`` - comunica se la sessione è attiva **senza fare richieste all'API**
         - ``token: str`` - token della sessione
-        - ``pagelle: list[dict[str, str]]`` - pagelle in formato JSON [4]_
 
     Complesse
 
@@ -74,11 +73,30 @@ Proprietà
 
         .. code-block:: python
 
-            return {
-                "id": self._dati["ident"],
-                "nome": self._dati["firstName"],
-                "cognome": self._dati["lastName"]
-            }
+            @property
+            def dati(self) -> dict[str, str]:
+                try:
+                    return {
+                        chiave: valore for chiave, valore in self._dati.items()
+                        if chiave in {"ident", "firstName", "lastName"}
+                    }
+                except KeyError:
+                    raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
+        
+        - ``pagelle: list[dict[str, str]]`` - pagelle dell'utente disponibili tra i documenti [4]_
+
+        .. code-block:: python
+
+            @property
+            def pagelle(self) -> list[dict[str, str]]:
+                documenti_ = asyncio.run(self.documenti())
+                try:
+                    return [{
+                        chiave: valore for chiave, valore in documento_.items() 
+                        if chiave in {"desc", "confirmLink", "viewLink"}
+                    } for documento_ in documenti_["schoolReports"]]
+                except KeyError:
+                    raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
 
 Metodi
 
