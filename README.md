@@ -1,4 +1,4 @@
-# Classeviva.py
+# Classeviva.py [![Total alerts](https://img.shields.io/lgtm/alerts/g/Lioydiano/Classeviva.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Lioydiano/Classeviva/alerts/)
 [`Python`](https://python.org) [`API wrapper`](https://rapidapi.com/blog/api-glossary/api-wrapper/) per [`Classeviva`](https://web.spaggiari.eu/) (registro elettronico di [`GruppoSpaggiariParma`](https://web.spaggiari.eu/www/app/default/index.php))
 
 # Documentazione
