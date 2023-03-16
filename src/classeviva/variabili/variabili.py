@@ -9,8 +9,8 @@ TEMPO_CONNESSIONE: int = 5400
 # Constante che indica l'intestazione per le richieste
 intestazione: dict[str, str] = {
     "content-type": "application/json",
-    "Z-Dev-ApiKey": "+zorro+",
-    "User-Agent": "zorro/1.0"
+    "Z-Dev-ApiKey": "Tg1NWEwNGIgIC0K",
+    "User-Agent": "CVVS/std/4.2.3 Android/12"
 }
 
 
