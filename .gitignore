@@ -134,5 +134,7 @@ uploader.py
 test.pdf
 username.txt
 password.txt
+./password.txt
+./username.txt
 *.pdf
 .vscode/
