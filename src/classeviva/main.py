@@ -404,6 +404,27 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
 
+    async def calendario_da_a(self, inizio: str, fine: str) -> Any:
+        if (None in {inizio, fine}):
+            return await self.calendario()
+        v.valida_date(inizio, fine)
+
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.calendario_da_a.format(
+                self._id,
+                inizio.replace('-', ''),
+                fine.replace('-', '')
+            ),
+            headers=self.__intestazione()
+        )
+
+        if (response.status_code == 200):
+            return response.json()["calendar"]
+        else:
+            e.sollevaErroreHTTP(response=response)
+
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Schoolbooks/schoolbooks.md
     async def libri(self) -> dict[str, int | str | dict[str, Any]]:
         if (not self.connesso):

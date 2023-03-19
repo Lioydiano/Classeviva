@@ -20,6 +20,7 @@ class Collegamenti:
     lezioni_giorno: str = f"{base}/v1/students/{{}}/lessons/{{}}"
     lezioni_da_a: str = f"{base}/v1/students/{{}}/lessons/{{}}/{{}}"
     calendario: str = f"{base}/v1/students/{{}}/calendar/all"
+    calendario_da_a: str = f"{base}/v1/students/{{}}/calendar/{{}}/{{}}"
     libri: str = f"{base}/v1/students/{{}}/schoolbooks"
     carta: str = f"{base}/v1/students/{{}}/card"
     voti: str = f"{base}/v1/students/{{}}/grades"

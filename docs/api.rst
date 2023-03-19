@@ -426,7 +426,28 @@ Metodi
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
+    - ``await self.calendario_da_a(inizio: str, fine: str)`` - ottieni il calendario in un range di date
+
+    .. code-block:: python
+
+        async def calendario_da_a(self, inizio: str, fine: str) -> list[dict[str, str | int]]:
+
+    Parametri
+
+        - ``inizio: str``: data di inizio, in formato ``YYYY-MM-DD``
+        - ``fine: str``: data di fine, in formato ``YYYY-MM-DD``
+
+    Ritorno
     
+        - ``list[dict[str, str | int]]`` - il calendario [21]_
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
     - ``await self.libri()`` - ottieni i libri di testo adottati per l'anno scolastico corrente [22]_
 
     .. code-block:: python
@@ -547,6 +568,9 @@ Metodi
         - ``classeviva.eccezioni.TokenNonValido`` - se il token non corrisponde a nessun avatar
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
+    ⚠️ **Avvertenze**
+
+        - Non è ancora chiaro come funzioni, l'endpoint non risponde, quindi non è possibile testare il metodo correttamente
 
 Metodi magici [11]_
 
