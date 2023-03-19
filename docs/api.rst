@@ -412,7 +412,29 @@ Metodi
         - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
         - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
-    
+
+    - ``await self.lezioni_da_a_materia(inizio: str, fine: str, materia: str)`` - ottieni le lezioni in un range di date di una materia
+
+    .. code-block:: python
+
+        async def lezioni_da_a_materia(self, inizio: str, fine: str, materia: str) -> list[dict[str, Any]]:
+
+    Parametri
+
+        - ``inizio: str``: data di inizio, in formato ``YYYY-MM-DD``
+        - ``fine: str``: data di fine, in formato ``YYYY-MM-DD``
+        - ``materia: str``: codice della materia
+
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - le lezioni del range richiesto [20]_
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.FormatoNonValido`` - il formato della data non è valido
+        - ``classeviva.eccezioni.DataFuoriGamma`` - la data non appartiene all'anno scolastico corrente, oppure la data di fine è precedente alla data di inizio
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
     - ``await self.calendario()`` - ottieni il calendario [21]_
 
     .. code-block:: python

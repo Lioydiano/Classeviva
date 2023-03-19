@@ -389,6 +389,32 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
 
+    async def lezioni_da_a_materia(self, inizio: str, fine: str, materia: str) -> list[dict[str, Any]]:
+        if (None in {inizio, fine}):
+            if (inizio is None and fine is None):
+                return await self.lezioni()
+            elif (inizio is None):
+                return await self.lezioni_da_a(v.data_inizio_anno(), fine)
+            elif (fine is None):
+                return await self.lezioni_da_a(inizio, v.data_fine_anno_o_oggi())
+        v.valida_date(inizio, fine)
+
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.lezioni_da_a_materia.format(
+                self._id,
+                inizio.replace('-', ''),
+                fine.replace('-', ''),
+                materia
+            ),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.json()["lessons"]
+        else:
+            e.sollevaErroreHTTP(response=response)
+
     # https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Calendar/calendar.md
     async def calendario(self) -> list[dict[str, str | int]]:
         if (not self.connesso):
@@ -406,7 +432,12 @@ class Utente(object):
 
     async def calendario_da_a(self, inizio: str, fine: str) -> Any:
         if (None in {inizio, fine}):
-            return await self.calendario()
+            if (inizio is None and fine is None):
+                return await self.calendario()
+            elif (inizio is None):
+                return await self.calendario_da_a(v.data_inizio_anno(), fine)
+            elif (fine is None):
+                return await self.calendario_da_a(inizio, v.data_fine_anno_o_oggi())
         v.valida_date(inizio, fine)
 
         if (not self.connesso):
