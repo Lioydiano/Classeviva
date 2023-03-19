@@ -522,7 +522,7 @@ class Utente(object):
             await self.accedi()
 
         response = self._sessione.get(
-            c.Collegamenti.avatar,
+            c.Collegamenti.avatar.format(self.id),
             headers=self.__intestazione()
         )
 
