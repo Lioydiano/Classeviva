@@ -423,7 +423,7 @@ Metodi
 
         - ``inizio: str``: data di inizio, in formato ``YYYY-MM-DD``
         - ``fine: str``: data di fine, in formato ``YYYY-MM-DD``
-        - ``materia: str``: codice della materia
+        - ``materia: str``: codice della materia (alla voce ``subjectId``)
 
     Ritorno
 

@@ -84,6 +84,43 @@ Utente
 
     >>> assenze = asyncio.run(utente.assenze())
 
+- Richiedere l'elenco delle lezioni di una determinata materia in un range di date
+
+.. code-block:: python
+
+    >>> lezioni = asyncio.run(utente.lezioni_da_a_materia("2023-01-01", "2023-01-31", "206164"))
+    [
+        ...,
+        {
+            'evtId': 9673367,
+            'evtDate': '2023-01-26',
+            'evtCode': 'LSF0',
+            'evtHPos': 4,
+            'evtDuration': 1,
+            'classDesc': '3QS SCIENTIFICO - OPZIONE SCIENZE APPLICATE QUADRIENNALE',
+            'authorName': 'Nome Cognome', # Nome e cognome dell'insegnante
+            'subjectId': 206164, # ID della materia (in questo caso Informatica), lo stesso ID usato come parametro per lezioni_da_a_materia
+            'subjectCode': None,
+            'subjectDesc': 'INFORMATICA',
+            'lessonType': 'Attività di laboratorio',
+            'lessonArg': 'Correzione esercizio per casa. Creazione di progetti con classi in file separati.'
+        },
+        {
+            'evtId': 9881475,
+            'evtDate': '2023-01-28',
+            'evtCode': 'LSF0',
+            'evtHPos': 4,
+            'evtDuration': 1,
+            'classDesc': '3QS SCIENTIFICO - OPZIONE SCIENZE APPLICATE QUADRIENNALE',
+            'authorName': 'ANTONIAZZI ALESSANDRA',
+            'subjectId': 206164,
+            'subjectCode': None,
+            'subjectDesc': 'INFORMATICA',
+            'lessonType': 'Attività di laboratorio',
+            'lessonArg': 'Lavoro di gruppo: creazione videogioco OOP in C++'
+        },
+        ...
+    ]
 
 Note
 ===========================
