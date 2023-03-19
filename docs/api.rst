@@ -544,6 +544,7 @@ Metodi
 
     Eccezioni
 
+        - ``classeviva.eccezioni.TokenNonValido`` - se il token non corrisponde a nessun avatar
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
 

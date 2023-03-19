@@ -514,6 +514,8 @@ class Utente(object):
             # 102:CvvRestApi\/wrong uri
             elif (errore.startswith('102')):
                 raise e.CategoriaNonPresente(f"Categoria di nota {tipo} non trovata")
+            else:
+                raise e.sollevaErroreHTTP(response=response)
         else:
             e.sollevaErroreHTTP(response=response)
 
@@ -522,12 +524,19 @@ class Utente(object):
             await self.accedi()
 
         response = self._sessione.get(
-            c.Collegamenti.avatar.format(self.id),
+            c.Collegamenti.avatar.format(self._id),
             headers=self.__intestazione()
         )
 
         if (response.status_code == 200):
             return response.content
+        elif (response.status_code == 401):
+            errore: str = response.json()["error"]
+            # 252:CvvRestApi/invalid auth token
+            if (errore.startswith('252')):
+                e.TokenNonValido("Token non valido")
+            else:
+                raise e.sollevaErroreHTTP(response=response)
         else:
             raise e.sollevaErroreHTTP(response=response)
 

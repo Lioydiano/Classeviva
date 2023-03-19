@@ -27,4 +27,4 @@ class Collegamenti:
     materie: str = f"{base}/v1/students/{{}}/subjects"
     note: str = f"{base}/v1/students/{{}}/notes/all"
     leggi_nota: str = f"{base}/v1/students/{{}}/notes/{{}}/read/{{}}"
-    avatar: str = f"{base}/v1/students/{{}}/avatar"
+    avatar: str = f"{base}/v1/users/{{}}/avatar"
