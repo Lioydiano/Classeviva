@@ -531,6 +531,20 @@ Metodi
         - ``classeviva.eccezioni.ParametroNonValido`` - se il campo ``id_`` non combacia con nessuna nota
         - ``classeviva.eccezioni.CategoriaNonPresente`` - se il campo ``tipo`` non combacia con nessuna categoria
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP di diversa natura
+    
+    - ``await self.avatar()`` - ottieni 
+
+    .. code-block:: python
+
+        async def avatar(self) -> bytes:
+    
+    Ritorno
+
+        - ``bytes`` - l'immagine in formato JPEG
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
 
 Metodi magici [11]_

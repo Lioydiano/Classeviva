@@ -517,6 +517,20 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
 
+    async def avatar(self) -> bytes:
+        if (not self.connesso):
+            await self.accedi()
+
+        response = self._sessione.get(
+            c.Collegamenti.avatar,
+            headers=self.__intestazione()
+        )
+
+        if (response.status_code == 200):
+            return response.content
+        else:
+            raise e.sollevaErroreHTTP(response=response)
+
     def __intestazione(self) -> dict[str, str]:
         intestazione = v.intestazione.copy()
         if (not hasattr(self, "_token")):
