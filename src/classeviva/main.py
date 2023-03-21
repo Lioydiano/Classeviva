@@ -571,6 +571,27 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
 
+    async def panoramica_da_a(self, inizio: str, fine: str) -> dict[str, Any]:
+        if (None in {inizio, fine}):
+            if (inizio is None and fine is not None):
+                return await self.panoramica_da_a(v.data_inizio_anno(), fine)
+            if (fine is None and inizio is not None):
+                return await self.panoramica_da_a(inizio, v.data_fine_anno())
+            return await self.panoramica_da_a(v.data_inizio_anno(), v.data_fine_anno())
+
+        if (not self.connesso):
+            await self.accedi()
+
+        response = self._sessione.get(
+            c.Collegamenti.panoramica_da_a.format(self._id, inizio, fine),
+            headers=self.__intestazione()
+        )
+
+        if (response.status_code == 200):
+            return response.json()
+        else:
+            e.sollevaErroreHTTP(response=response)
+
     async def avatar(self) -> bytes:
         if (not self.connesso):
             await self.accedi()
