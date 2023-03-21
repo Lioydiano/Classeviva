@@ -578,13 +578,17 @@ class Utente(object):
             if (fine is None and inizio is not None):
                 return await self.panoramica_da_a(inizio, v.data_fine_anno())
             return await self.panoramica_da_a(v.data_inizio_anno(), v.data_fine_anno())
+        v.valida_date(inizio, fine)
 
         if (not self.connesso):
             await self.accedi()
 
         response = self._sessione.get(
-            c.Collegamenti.panoramica_da_a.format(self._id, inizio, fine),
-            headers=self.__intestazione()
+            c.Collegamenti.panoramica_da_a.format(
+                self._id,
+                inizio.replace('-', ''),
+                fine.replace('-', '')
+            ), headers=self.__intestazione()
         )
 
         if (response.status_code == 200):
