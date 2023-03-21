@@ -364,7 +364,7 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
     
-    async def lezioni_da_a(self, inizio: str, fine: str) -> list[dict[str, Any]]:
+    async def lezioni_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
         if (None in {inizio, fine}):
             if (inizio is None and fine is None):
                 return await self.lezioni()
@@ -389,7 +389,7 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
 
-    async def lezioni_da_a_materia(self, inizio: str, fine: str, materia: str) -> list[dict[str, Any]]:
+    async def lezioni_da_a_materia(self, *, inizio: str=None, fine: str=None, materia: str=None) -> list[dict[str, Any]]:
         if (None in {inizio, fine}):
             if (inizio is None and fine is None):
                 return await self.lezioni()
@@ -430,7 +430,7 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
 
-    async def calendario_da_a(self, inizio: str, fine: str) -> Any:
+    async def calendario_da_a(self, inizio: str=None, fine: str=None) -> Any:
         if (None in {inizio, fine}):
             if (inizio is None and fine is None):
                 return await self.calendario()
@@ -571,7 +571,7 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
 
-    async def panoramica_da_a(self, inizio: str, fine: str) -> dict[str, Any]:
+    async def panoramica_da_a(self, inizio: str=None, fine: str=None) -> dict[str, dict[str, Any] | list[dict[str, Any]]]:
         if (None in {inizio, fine}):
             if (inizio is None and fine is not None):
                 return await self.panoramica_da_a(v.data_inizio_anno(), fine)

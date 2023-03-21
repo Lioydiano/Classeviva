@@ -396,7 +396,7 @@ Metodi
 
     .. code-block:: python
 
-        async def lezioni_da_a(self, inizio: str, fine: str) -> list[dict[str, Any]]:
+        async def lezioni_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, Any]]:
     
     Parametri
     
@@ -417,7 +417,7 @@ Metodi
 
     .. code-block:: python
 
-        async def lezioni_da_a_materia(self, inizio: str, fine: str, materia: str) -> list[dict[str, Any]]:
+        async def lezioni_da_a_materia(self, *, inizio: str=None, fine: str=None, materia: str=None) -> list[dict[str, Any]]:
 
     Parametri
 
@@ -453,7 +453,7 @@ Metodi
 
     .. code-block:: python
 
-        async def calendario_da_a(self, inizio: str, fine: str) -> list[dict[str, str | int]]:
+        async def calendario_da_a(self, inizio: str=None, fine: str=None) -> list[dict[str, str | int]]:
 
     Parametri
 
@@ -574,7 +574,39 @@ Metodi
         - ``classeviva.eccezioni.ParametroNonValido`` - se il campo ``id_`` non combacia con nessuna nota
         - ``classeviva.eccezioni.CategoriaNonPresente`` - se il campo ``tipo`` non combacia con nessuna categoria
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP di diversa natura
-    
+
+    - ``await self.panoramica_da_a(inizio: str, fine: str)`` - ottieni la panoramica dello studente in un intervallo di date
+
+    .. code-block:: python
+
+        async def panoramica_da_a(self, inizio: str=None, fine: str=None) -> dict[str, dict[str, Any] | list[dict[str, Any]]]:
+
+    Parametri
+
+        - ``inizio: str``: data di inizio, in formato ``YYYY-MM-DD``
+        - ``fine: str``: data di fine, in formato ``YYYY-MM-DD``
+
+    Ritorno
+
+        - ``dict[str, dict[str, Any] | list[dict[str, Any]]]`` - la panoramica dello studente in un intervallo di date
+
+        Le chiavi del dizionario ritornato sono le seguenti:
+
+        .. code-block:: python
+
+            dict_keys(['virtualClassesAgenda', 'lessons', 'agenda', 'events', 'grades', 'notes'])
+
+        Ogni chiave contiene un valore già documentato alla rispettiva sezione.
+
+        ⚠️ **Avvertenze**
+
+            - La sezione ``virtualClassesAgenda`` non è ancora documentata, risulta essere una lista vuota
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.FormatoNonValido`` - formato della data non valido
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP di diversa natura
+
     - ``await self.avatar()`` - ottieni 
 
     .. code-block:: python
