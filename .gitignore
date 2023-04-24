@@ -128,14 +128,17 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Altro
-test.py
-media.py
-uploader.py
-test.pdf
+# Credenziali
 username.txt
 password.txt
 ./password.txt
 ./username.txt
+*/password.txt
+*/username.txt
+
+# Altro
+uploader.py
 *.pdf
 .vscode/
+demo/
+demo/*
