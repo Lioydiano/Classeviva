@@ -32,7 +32,7 @@ def data_inizio_anno() -> str:
 
 
 def data_fine_anno() -> str:
-    return f"{anno()}0630"
+    return f"{anno()+1}0630"
 
 
 def data_fine_anno_o_oggi() -> str:
