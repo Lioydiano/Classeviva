@@ -180,7 +180,6 @@ class Utente(object):
     async def agenda(self) -> list[dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
-        print(f"{v.data_inizio_anno()=} {v.data_fine_anno()=}")
         response = self._sessione.get(
             c.Collegamenti.agenda_da_a.format(
                 self._id,
