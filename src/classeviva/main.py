@@ -188,6 +188,7 @@ class Utente(object):
             ),
             headers=self.__intestazione()
         )
+        print(f"{v.data_inizio_anno()=} {v.data_fine_anno()=}")
         if (response.status_code == 200):
             return response.json()["agenda"]
         else:
