@@ -180,6 +180,7 @@ class Utente(object):
     async def agenda(self) -> list[dict[str, Any]]:
         if (not self.connesso):
             await self.accedi()
+        print(f"{v.data_inizio_anno()=} {v.data_fine_anno()=}")
         response = self._sessione.get(
             c.Collegamenti.agenda_da_a.format(
                 self._id,
@@ -188,7 +189,6 @@ class Utente(object):
             ),
             headers=self.__intestazione()
         )
-        print(f"{v.data_inizio_anno()=} {v.data_fine_anno()=}")
         if (response.status_code == 200):
             return response.json()["agenda"]
         else:
