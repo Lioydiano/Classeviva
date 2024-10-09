@@ -16,7 +16,11 @@ class Utente(object):
     
     def __init__(self, id: str, password: str) -> None:
         self.id = id
-        self._id = id.removeprefix("S")
+        self._id = id.removeprefix("S").removeprefix("G")
+        # ClasseViva IDs are expected to start with a letter ('S' or 'G') followed by numbers.
+        # If this format is consistently confirmed, the code could be simplified by using the line below 
+        # to remove the leading letter and handle both 'S' and 'G' IDs efficiently:
+        # self._id = id.lstrip("SG")
         self.password = password
         self._sessione = requests.Session()
         self._dati: dict = {}
