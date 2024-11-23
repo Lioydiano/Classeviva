@@ -6,8 +6,6 @@
 # Documentazione
 La [`documentazione italiana`](https://classeviva.readthedocs.io/it/stable/) si trova su ReadTheDocs.
 
-Purtroppo la documentazione non è aggiornata perché [manca un file di configurazione](https://readthedocs.org/projects/classeviva/builds/26374357/) che mi appresto a creare; inoltre [manca un ulteriore file](https://readthedocs.org/projects/classeviva/builds/26375212/).
-
 # Contributi
 Il codice sorgente può essere modificato su [`GitHub Dev`](https://github.dev) con l'[`editor della repository`](https://github.dev/Lioydiano/Classeviva); anche aprire delle [issue]([url](https://github.com/Lioydiano/Classeviva/issues)) può aiutare.
 
