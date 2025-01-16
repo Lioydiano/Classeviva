@@ -323,7 +323,19 @@ class Utente(object):
         else:
             e.sollevaErroreHTTP(response=response)
 
-    async def bacheca_allega(self, codice: str, id_: int) -> bytes:
+    async def bacheca_allega(self, id_: int) -> bytes:
+        if (not self.connesso):
+            await self.accedi()
+        response = self._sessione.get(
+            c.Collegamenti.bacheca_allega_esterno.format(id_),
+            headers=self.__intestazione()
+        )
+        if (response.status_code == 200):
+            return response.content
+        else:
+            e.sollevaErroreHTTP(response=response)
+
+    async def bacheca_allega_(self, codice: str, id_: int) -> bytes:
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
@@ -331,8 +343,6 @@ class Utente(object):
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
-            # Sembra che gli allegati siano quasi esclusivamente .pdf, ma non essendo TUTTI .pdf la funzione ritorna un oggetto bytes
-            # TODO: per la versione 0.4.1 introdurre un metodo per codificare direttamente i bytes in un file con lo stesso nome dell'allegato di Classeviva
             return response.content
         else:
             e.sollevaErroreHTTP(response=response)
