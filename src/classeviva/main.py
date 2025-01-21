@@ -328,7 +328,17 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             c.Collegamenti.bacheca_allega_esterno.format(id_),
-            headers=self.__intestazione()
+            headers=(self.__intestazione() | {
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "cross-site",
+                "Sec-Fetch-User": "?1",
+                "Upgrade-Insecure-Requests": "1"
+            }),
+            params={
+                "referrer": "https://web.spaggiari.eu/sif/app/default/bacheca_personale.php",
+                "mode": "cors"
+            }
         )
         if (response.status_code == 200):
             return response.content
