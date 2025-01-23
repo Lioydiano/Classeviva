@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from types import NoneType
 from typing import Any, Iterable
 from collections.abc import Iterable as IterableABC
+from requests.utils import dict_from_cookiejar, cookiejar_from_dict
 import requests
 
 from .collegamenti import collegamenti as c
@@ -326,6 +327,10 @@ class Utente(object):
     async def bacheca_allega(self, id_: int) -> bytes:
         if (not self.connesso):
             await self.accedi()
+        cookies = dict_from_cookiejar(self._sessione.cookies)
+        cookies["webidentity"] = self._id
+        cookies["webrole"] = "gen" # Will this always be "gen"?
+        self._sessione.cookies = cookiejar_from_dict(cookies)
         response = self._sessione.get(
             c.Collegamenti.bacheca_allega_esterno.format(id_),
             headers=(self.__intestazione() | {
@@ -337,7 +342,9 @@ class Utente(object):
             }),
             params={
                 "referrer": "https://web.spaggiari.eu/sif/app/default/bacheca_personale.php",
-                "mode": "cors"
+                "mode": "cors",
+                "action": "file_download",
+                "com_id": id_
             }
         )
         if (response.status_code == 200):
