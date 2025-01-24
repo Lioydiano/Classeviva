@@ -327,25 +327,17 @@ class Utente(object):
     async def bacheca_allega(self, id_: int) -> bytes:
         if (not self.connesso):
             await self.accedi()
-        cookies = dict_from_cookiejar(self._sessione.cookies)
-        cookies["webidentity"] = self._id
-        cookies["webrole"] = "gen" # Will this always be "gen"?
-        self._sessione.cookies = cookiejar_from_dict(cookies)
+
+        self._sessione.post(
+            url = "https://web.spaggiari.eu/auth-p7/app/default/AuthApi4.php?a=aLoginPwd",
+            data = {"cid": None, "uid":self._id, "pwd":self.password, "pin": None, "target":None}
+        )
+        self._sessione.post(
+            url = "https://web.spaggiari.eu/sif/app/default/bacheca_personale.php",
+            data = {"action" : "get_comunicazioni", "cerca": None, "ncna" : 1 , "tipo_com":None}
+        ) # Anche se dubito che questo serva
         response = self._sessione.get(
-            c.Collegamenti.bacheca_allega_esterno.format(id_),
-            headers=(self.__intestazione() | {
-                "Sec-Fetch-Dest": "document",
-                "Sec-Fetch-Mode": "navigate",
-                "Sec-Fetch-Site": "cross-site",
-                "Sec-Fetch-User": "?1",
-                "Upgrade-Insecure-Requests": "1"
-            }),
-            params={
-                "referrer": "https://web.spaggiari.eu/sif/app/default/bacheca_personale.php",
-                "mode": "cors",
-                "action": "file_download",
-                "com_id": id_
-            }
+            url = "https://web.spaggiari.eu/sif/app/default/bacheca_personale.php?action=file_download&com_id=5916722"
         )
         if (response.status_code == 200):
             return response.content
