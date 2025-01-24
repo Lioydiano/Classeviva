@@ -331,13 +331,13 @@ class Utente(object):
         self._sessione.post(
             url = "https://web.spaggiari.eu/auth-p7/app/default/AuthApi4.php?a=aLoginPwd",
             data = {"cid": None, "uid":self._id, "pwd":self.password, "pin": None, "target":None}
-        )
+        ) # Login ridondante? Boh, ma non dovrebbe creare problemi. Al massimo lo si toglie.
         self._sessione.post(
             url = "https://web.spaggiari.eu/sif/app/default/bacheca_personale.php",
             data = {"action" : "get_comunicazioni", "cerca": None, "ncna" : 1 , "tipo_com":None}
         ) # Anche se dubito che questo serva
         response = self._sessione.get(
-            url = "https://web.spaggiari.eu/sif/app/default/bacheca_personale.php?action=file_download&com_id=5916722"
+            url = c.Collegamenti.bacheca_allega_esterno.format(id_),
         )
         if (response.status_code == 200):
             return response.content
