@@ -286,11 +286,10 @@ class Utente(object):
             e.sollevaErroreHTTP(response=response)
 
     async def didattica_elemento(self, contenuto: int) -> Any:
-        # Sembra che ritorni lo stesso valore di didattica() indipendentemente da contenuto
         if (not self.connesso):
             await self.accedi()
         response = self._sessione.get(
-            c.Collegamenti.didattica.format(self._id, contenuto),
+            c.Collegamenti.didattica_elemento.format(self._id, contenuto),
             headers=self.__intestazione()
         )
         if (response.status_code == 200):
