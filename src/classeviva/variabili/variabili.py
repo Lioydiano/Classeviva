@@ -24,7 +24,11 @@ def valida_date(*date_: str) -> None:
 
 
 def anno() -> int:
-    return datetime.now().year
+    # Return the academic-year start year:
+    # if current month >= September, the academic year starts this calendar year,
+    # otherwise it started the previous calendar year.
+    now = datetime.now()
+    return now.year if now.month >= 9 else now.year - 1
 
 
 def data_inizio_anno() -> str:
@@ -37,6 +41,7 @@ def data_fine_anno() -> str:
 
 def data_fine_anno_o_oggi() -> str:
     # Restituisce la data di fine anno scolastico o quella del giorno corrente
-    if (datetime.now() < datetime(anno(), 6, 30)):
-        return f"{anno()}{datetime.now().strftime('%m%d')}"
+    end_of_school = datetime(anno()+1, 6, 30)
+    if datetime.now() <= end_of_school:
+        return datetime.now().strftime('%Y%m%d')
     return data_fine_anno()
