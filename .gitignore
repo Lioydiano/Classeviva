@@ -135,6 +135,7 @@ password.txt
 ./username.txt
 */password.txt
 */username.txt
+.pypi-token
 
 # Altro
 uploader.py
