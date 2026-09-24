@@ -33,8 +33,8 @@ def valida_date(*dates_: str) -> Type[datetime.date] | tuple[Type[datetime.date]
 
 def valida_inizio_fine(inizio: str | None, fine: str | None) -> tuple[Type[datetime.date], Type[datetime.date]]:
     return (
-        valida_date(inizio) if inizio else data_inizio_anno(),
-        valida_date(fine) if fine else data_fine_anno(),
+        valida_date(inizio) if inizio else datetime(year=anno(), month=9, day=1),
+        valida_date(fine) if fine else datetime(year=anno()+1, month=6, day=30),
     )
 
 def valida_anno(*year_: str) -> None:

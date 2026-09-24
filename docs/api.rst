@@ -91,7 +91,7 @@ Proprietà
                 def pagelle(self) -> list[dict[str, str]]:
                     documenti_ = asyncio.run(self.documenti())
                     if not documenti_:
-                        raise ValueError(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono acora uscite)")
+                        raise ValueError(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono ancora uscite)")
 
                     try:
                         return [{
@@ -99,7 +99,7 @@ Proprietà
                             if chiave in {"desc", "confirmLink", "viewLink"}
                         } for documento_ in documenti_["schoolReports"]]
                     except KeyError:
-                        raise SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono acora uscite)")
+                        raise SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono ancora uscite)")
 
 Metodi
 
@@ -501,11 +501,11 @@ Metodi
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
-    - ``await self.voti()`` - ottieni le valutazioni dello studente [24]_
+    - ``await self.voti("26")`` - ottieni le valutazioni dello studente pe l'anno 2026 [24]_
 
     .. code-block:: python
 
-        async def voti(self) -> list[dict[str, str | int | NoneType]]:
+        async def voti(self, anno: str) -> list[dict[str, str | int | NoneType]]:
     
     Ritorno
 

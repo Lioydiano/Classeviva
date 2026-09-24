@@ -50,6 +50,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+test.*
 
 # Translations
 *.mo
@@ -67,6 +68,9 @@ instance/
 
 # Scrapy stuff:
 .scrapy
+
+# PyCharm stuff:
+.idea
 
 # Sphinx documentation
 docs/_build/

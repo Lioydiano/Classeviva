@@ -94,20 +94,20 @@ class CategoriaNonPresente(ValoreNonValido):
     pass
 
 
-def ottieniErroreHTTP(response: Response) -> Exception:
+def sollevaErroreHTTP(response: Response) -> Exception:
     if isinstance(response, Response):
         try:
             if response.status_code == 404:
-                return ErroreHTTP404(f"""
+                raise ErroreHTTP404(f"""
                     Testo: {response.text}
                     Risposta: {response.json()}
                 """)
-            return ErroreHTTP(f"""
+            raise ErroreHTTP(f"""
                     Richiesta non corretta 
                     Codice: {response.status_code}
                     Testo: {response.text}
                     Risposta: {response.json()}
                 """)
         except AttributeError:
-            return ErroreHTTP("Richiesta non corretta")
+            raise ErroreHTTP("Richiesta non corretta")
     raise TypeError(f"Il parametro \'response\' di classeviva.eccezioni.sollevaErroreHTTP deve essere di tipo requests.Response, non \'{type(response).__name__}\'")

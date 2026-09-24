@@ -60,9 +60,9 @@ class Utente(object):
         self._sessione.headers.update(intestazione)
         response = self._sessione.get(Collegamenti.accesso)
         if response.status_code != 200:
-            ottieniErroreHTTP(response=response)
+            sollevaErroreHTTP(response=response)
 
-        dati = {"cid": "", "uid": {self.id}, "pwd": {self.password}, "pin": "", "target": ""}
+        dati = {"cid": "", "uid": self.id, "pwd": self.password, "pin": "", "target": ""}
         response = self._sessione.post(
             Collegamenti.autenticazione,
             data=dati
@@ -77,8 +77,7 @@ class Utente(object):
         elif response.status_code == 422:
             raise PasswordNonValida(f"La password di {self} non combacia")
         else:
-            ottieniErroreHTTP(response=response)
-            return None
+            sollevaErroreHTTP(response=response)
 
 
     async def documenti(self) -> dict[str, list[dict[str, str]]]:
@@ -88,7 +87,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()
         else:
-            raise ottieniErroreHTTP(response=response)
+            sollevaErroreHTTP(response=response)
 
     async def controlla_documento(self, documento: str) -> bool:
         if not self.connesso:
@@ -99,7 +98,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["document"]["available"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def assenze(self) -> list[dict[str, Any]]:
         if not self.connesso:
@@ -110,7 +109,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["events"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def assenze_da(self, inizio: str | None = None) -> list[dict[str, Any]]:
         inizio, _ = valida_inizio_fine(inizio, None)
@@ -137,9 +136,9 @@ class Utente(object):
                     Inizio: {inizio}
                 """)
             else:
-                 raise ottieniErroreHTTP(response=response)
+                 sollevaErroreHTTP(response=response)
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def assenze_da_a(self, inizio: str | None = None, fine: str | None = None) -> list[dict[str, Any]]:
         inizio, fine = valida_inizio_fine(inizio, fine)
@@ -147,7 +146,7 @@ class Utente(object):
         if not self.connesso:
             await self.accedi()
         response = self._sessione.get(
-            Collegamenti.assenze_da.format(
+            Collegamenti.assenze_da_a.format(
                 self._id, 
                 inizio,
                 fine,
@@ -175,7 +174,7 @@ class Utente(object):
                     {response.json()}
                 """)
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def agenda(self) -> list[dict[str, Any]]:
         if not self.connesso:
@@ -190,7 +189,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["agenda"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def agenda_da_a(self, inizio: str | None = None, fine: str | None = None) -> list[dict[str, Any]]:
         inizio, fine = valida_inizio_fine(inizio, fine)
@@ -222,7 +221,7 @@ class Utente(object):
                 """)
             else: raise ErroreHTTP404(errore)
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def agenda_codice_da_a(self, codice: str, inizio: str | None = None, fine: str | None = None) -> list[dict[str, Any]]:
         inizio, fine = valida_inizio_fine(inizio, fine)
@@ -258,7 +257,7 @@ class Utente(object):
                     {response.json()}
                 """)
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def didattica(self) -> list[dict[str, Any]]:
         if not self.connesso:
@@ -269,7 +268,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["didacticts"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def didattica_elemento(self, contenuto: int) -> Any:
         if not self.connesso:
@@ -280,7 +279,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def bacheca(self) -> list[dict[str, str | bool | dict[str, str | int]]]:
         if not self.connesso:
@@ -291,7 +290,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["items"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def bacheca_leggi(self, codice: str, id_: int) -> dict[str, dict[str, Any]]:
         if not self.connesso:
@@ -302,7 +301,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def bacheca_allega(self, id_: int) -> bytes:
         if not self.connesso:
@@ -323,7 +322,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.content
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def bacheca_allega_(self, codice: str, id_: int) -> bytes:
         if not self.connesso:
@@ -334,7 +333,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.content
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     bacheca_allegato = bacheca_allega
 
@@ -348,7 +347,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["lessons"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
     
     async def lezioni_giorno(self, giorno: str | None = None) -> list[dict[str, Any]]:
         if giorno is None:
@@ -363,7 +362,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["lessons"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
     
     async def lezioni_da_a(self, inizio: str | None = None, fine: str | None = None) -> list[dict[str, Any]]:
         inizio, fine = valida_inizio_fine(inizio, fine)
@@ -380,7 +379,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["lessons"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def lezioni_da_a_materia(self, *, inizio: str | None = None, fine: str | None = None, materia: str | None = None) -> list[dict[str, Any]]:
         inizio, fine = valida_inizio_fine(inizio, fine)
@@ -398,7 +397,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["lessons"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def calendario(self) -> list[dict[str, str | int]]:
         if not self.connesso:
@@ -411,7 +410,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["calendar"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def calendario_da_a(self, inizio: str | None = None, fine: str | None = None) -> Any:
         inizio, fine = valida_inizio_fine(inizio, fine)
@@ -427,7 +426,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["calendar"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def libri(self) -> dict[str, int | str | dict[str, Any]]:
         if not self.connesso:
@@ -440,7 +439,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["schoolbooks"][0]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def carta(self) -> dict[str, str | int]:
         if not self.connesso:
@@ -453,7 +452,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["card"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def voti(self, anno: str) -> list[dict[str, str | int | NoneType]]:
         if not self.connesso:
@@ -468,7 +467,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["grades"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def periodi(self) -> list[dict[str, str | int | bool | NoneType]]:
         if not self.connesso:
@@ -481,7 +480,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["periods"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def materie(self) -> list[dict[str, str | int | list[dict[str, str]]]]:
         if not self.connesso:
@@ -494,7 +493,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["subjects"]
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def note(self) -> dict[str, list[dict[str, str | int | bool]]]:
         if not self.connesso:
@@ -507,7 +506,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def leggi_nota(self, tipo: str, id_: int) -> str:
         if not self.connesso:
@@ -528,9 +527,9 @@ class Utente(object):
             elif errore.startswith('102'):
                 raise CategoriaNonPresente(f"Categoria di nota {tipo} non trovata")
             else:
-                 raise ottieniErroreHTTP(response=response)
+                 sollevaErroreHTTP(response=response)
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def panoramica(self) -> dict[str, dict[str, Any] | list[dict[str, Any]]]:
 
@@ -548,7 +547,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def panoramica_completa(self, year: str) -> dict[str, dict[str, Any] | list[dict[str, Any]]]:
 
@@ -569,7 +568,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
 
     async def panoramica_da_a(self, inizio: str | None = None, fine: str | None = None) -> dict[str, dict[str, Any] | list[dict[str, Any]]]:
@@ -589,7 +588,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
     async def panoramica_completa_da_a(self, inizio: str | None = None, fine: str | None = None) -> dict[str, dict[str, Any] | list[dict[str, Any]]]:
         inizio, fine = valida_inizio_fine(inizio, fine)
@@ -609,7 +608,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()
         else:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
 
 
     @property
@@ -618,7 +617,7 @@ class Utente(object):
             Collegamenti.biglietto
         )
         if response.status_code != 200:
-             raise ottieniErroreHTTP(response=response)
+             sollevaErroreHTTP(response=response)
         try:
             return response.json()
         except Exception as e_:
@@ -655,7 +654,7 @@ class Utente(object):
     def pagelle(self) -> list[dict[str, str]]:
         documenti_ = asyncio.run(self.documenti())
         if not documenti_:
-            raise ValueError(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono acora uscite)")
+            raise ValueError(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono ancora uscite)")
 
         try:
             return [{
@@ -663,7 +662,7 @@ class Utente(object):
                 if chiave in {"desc", "confirmLink", "viewLink"}
             } for documento_ in documenti_["schoolReports"]]
         except KeyError:
-            raise SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono acora uscite)")
+            raise SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono ancora uscite)")
 
     @property
     def token(self) -> str:
