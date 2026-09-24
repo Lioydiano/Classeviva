@@ -13,15 +13,16 @@
 3. Build and check the package from the tagged commit:
 
    ```sh
-   python -m pip install --upgrade build twine
-   python -m build --sdist
-   python -m twine check dist/classeviva_py-1.2.11rc1.tar.gz
+   python -m venv .venv
+   .venv/bin/python -m pip install build twine
+   .venv/bin/python -m build --sdist
+   .venv/bin/python -m twine check dist/classeviva_py-1.2.11rc1.tar.gz
    ```
 
 4. Upload the new archive to PyPI. Use a PyPI API token as the password; never commit it:
 
    ```sh
-   python -m twine upload --username __token__ dist/classeviva_py-1.2.11rc1.tar.gz
+   .venv/bin/python -m twine upload --username __token__ dist/classeviva_py-1.2.11rc1.tar.gz
    ```
 
 5. Create a GitHub release from the tag. Mark release candidates as **pre-releases**. Verify that the GitHub tag and the version on [PyPI](https://pypi.org/project/Classeviva.py/) match.
