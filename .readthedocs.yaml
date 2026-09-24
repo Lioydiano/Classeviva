@@ -22,9 +22,9 @@ sphinx:
   # Fail on all warnings to avoid broken references
   # fail_on_warning: true
 
-# Optionally build your docs in additional formats such as PDF and ePub
+# Optionally build your docs in additional formats such as PDF and epub
 # formats:
-#   - pdf
+#   - PDF
 #   - epub
 
 # Optional but recommended, declare the Python requirements required
