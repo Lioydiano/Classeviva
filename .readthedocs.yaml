@@ -8,7 +8,7 @@ version: 2
 build:
   os: ubuntu-22.04
   tools:
-    python: "3.12"
+    python: "3.14"
     # You can also specify other tool versions:
     # nodejs: "20"
     # rust: "1.70"
@@ -22,9 +22,9 @@ sphinx:
   # Fail on all warnings to avoid broken references
   # fail_on_warning: true
 
-# Optionally build your docs in additional formats such as PDF and ePub
+# Optionally build your docs in additional formats such as PDF and epub
 # formats:
-#   - pdf
+#   - PDF
 #   - epub
 
 # Optional but recommended, declare the Python requirements required

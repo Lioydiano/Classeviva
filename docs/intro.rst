@@ -112,7 +112,7 @@ Utente
             'evtHPos': 4,
             'evtDuration': 1,
             'classDesc': '3QS SCIENTIFICO - OPZIONE SCIENZE APPLICATE QUADRIENNALE',
-            'authorName': 'ANTONIAZZI ALESSANDRA',
+            'authorName': 'Nome Cognome', # Nome e cognome dell'insegnante
             'subjectId': 206164,
             'subjectCode': None,
             'subjectDesc': 'INFORMATICA',

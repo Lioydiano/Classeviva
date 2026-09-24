@@ -81,22 +81,25 @@ Proprietà
                         if chiave in {"ident", "firstName", "lastName"}
                     }
                 except KeyError:
-                    raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
+                    raise SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
         
         - ``pagelle: list[dict[str, str]]`` - pagelle dell'utente disponibili tra i documenti [4]_
 
         .. code-block:: python
 
-            @property
-            def pagelle(self) -> list[dict[str, str]]:
-                documenti_ = asyncio.run(self.documenti())
-                try:
-                    return [{
-                        chiave: valore for chiave, valore in documento_.items() 
-                        if chiave in {"desc", "confirmLink", "viewLink"}
-                    } for documento_ in documenti_["schoolReports"]]
-                except KeyError:
-                    raise e.SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà")
+                @property
+                def pagelle(self) -> list[dict[str, str]]:
+                    documenti_ = asyncio.run(self.documenti())
+                    if not documenti_:
+                        raise ValueError(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono ancora uscite)")
+
+                    try:
+                        return [{
+                            chiave: valore for chiave, valore in documento_.items()
+                            if chiave in {"desc", "confirmLink", "viewLink"}
+                        } for documento_ in documenti_["schoolReports"]]
+                    except KeyError:
+                        raise SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono ancora uscite)")
 
 Metodi
 
@@ -440,11 +443,11 @@ Metodi
     .. code-block:: python
 
         async def calendario(self) -> list[dict[str, str | int]]:
-    
+
     Ritorno
 
         - ``list[dict[str, str | int]]`` - il calendario [21]_
-    
+
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
@@ -461,7 +464,7 @@ Metodi
         - ``fine: str``: data di fine, in formato ``YYYY-MM-DD``
 
     Ritorno
-    
+
         - ``list[dict[str, str | int]]`` - il calendario [21]_
 
     Eccezioni
@@ -498,11 +501,11 @@ Metodi
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
-    - ``await self.voti()`` - ottieni le valutazioni dello studente [24]_
+    - ``await self.voti("26")`` - ottieni le valutazioni dello studente pe l'anno 2026 [24]_
 
     .. code-block:: python
 
-        async def voti(self) -> list[dict[str, str | int | NoneType]]:
+        async def voti(self, anno: str) -> list[dict[str, str | int | NoneType]]:
     
     Ritorno
 
@@ -554,7 +557,7 @@ Metodi
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
-    - ``await self.leggi_nota(tipo: str, id_: int)`` - leggi la nota data categoria e ID [28]_
+    - ``await self.leggi_nota(tipo: str, id_: int)`` - leggi la nota data categoria e ID [27]_
 
     .. code-block:: python
 
@@ -562,8 +565,8 @@ Metodi
 
     Parametri
 
-        - ``tipo: str``: categoria della nota [29]_
-        - ``id_: int``: ID della nota [30]_
+        - ``tipo: str``: categoria della nota [27]_
+        - ``id_: int``: ID della nota [28]_
 
     Ritorno
 
@@ -1000,14 +1003,12 @@ Note
 .. [17] Ne è un esempio ``TokenNonPresente``, che pur rientrando nella descrizione di ``NonAccesso`` non ne è sottoclasse perché già parte di ``TokenErrore``
 .. [18] Alla versione ``0.1.0`` va fatto manualmente sollevando l'eccezione come descritto sotto
 .. [19] La struttura dei dizionari contenuti nella lista è complessa, può essere trovata `qui <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Didactics/didactics.md>`_
-.. [20] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Lessons/lessons.md>`_
-.. [21] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Calendar/calendar.md>`_
-.. [22] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Schoolbooks/schoolbooks.md>`_
-.. [23] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Card/card.md>`_
-.. [24] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Grades/grades.md>`_
-.. [25] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Periods/periods.md>`_
-.. [26] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Subjects/subjects.md>`_
-.. [27] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Notes/all.md>`_
-.. [28] Si veda `la documentazione <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Notes/read.md>`_
-.. [29] Le categorie sono "NTTE", "NTCL", "NTWN" e "NTST". I significati delle sigle non sono ancora chiari
-.. [30] L'ID si trova alla voce "evtId" di ogni dizionario contenuto nella lista di dizionari restituita dalla richiesta di note
+.. [20] Si veda `la documentazione <https://github.com/open-viva/endpoints#lessons>`_
+.. [21] Si veda `la documentazione (DEPRECATA) <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Calendar/calendar.md>`_
+.. [22] Si veda `la documentazione <https://github.com/open-viva/endpoints#schoolbooks>`_
+.. [23] Si veda `la documentazione (DEPRECATA) <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Card/card.md>`_
+.. [24] Si veda `la documentazione <https://github.com/open-viva/endpoints#grades>`_
+.. [25] Si veda `la documentazione (DEPRECATA) <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Periods/periods.md>`_
+.. [26] Si veda `la documentazione <https://github.com/open-viva/endpoints#subjects>`_
+.. [27] Si veda `la documentazione <https://github.com/open-viva/endpoints#notes>`_
+.. [28] L'ID si trova alla voce "evtId" di ogni dizionario contenuto nella lista di dizionari restituita dalla richiesta di note

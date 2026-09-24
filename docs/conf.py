@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "Classeviva.py"
-copyright = "2022, Lioydiano"
+copyright = "2022-2026, Lioydiano"
 author = "FLAK-ZOSO"
 
 
