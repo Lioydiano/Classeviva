@@ -625,9 +625,9 @@ class Utente(object):
 
     @property
     def biglietto(self) -> str:
-        if not self.biglietto_completo:
+        biglietto_completo = self.biglietto_completo
+        if not biglietto_completo:
             raise SenzaDati(f"{self.__class__.__name__}.biglietto non esiste.")
-        
         try:
             return self.biglietto_completo["ticket"]
         except Exception as e_:
@@ -635,7 +635,7 @@ class Utente(object):
 
     @property
     def connesso(self) -> bool:
-        if hasattr(self, "inizio"):
+        if self.inizio is not None:
             passati = (datetime.now(timezone.utc) - self.inizio).total_seconds()
             return passati < TEMPO_CONNESSIONE
         return False
