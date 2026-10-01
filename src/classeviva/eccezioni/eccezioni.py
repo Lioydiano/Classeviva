@@ -108,6 +108,10 @@ def sollevaErroreHTTP(response: Response) -> Exception:
                     Testo: {response.text}
                     Risposta: {response.json()}
                 """)
-        except AttributeError:
+        # Una risposta d'errore può contenere HTML invece di JSON, ad esempio
+        # quando un proxy restituisce una pagina 502/503. In questo caso la
+        # lettura del JSON fallisce e viene sollevato un ValueError, che qui
+        # viene convertito nell'eccezione HTTP prevista.
+        except (AttributeError, ValueError):
             raise ErroreHTTP("Richiesta non corretta")
     raise TypeError(f"Il parametro \'response\' di classeviva.eccezioni.sollevaErroreHTTP deve essere di tipo requests.Response, non \'{type(response).__name__}\'")
