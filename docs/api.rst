@@ -54,6 +54,7 @@ Attributi
     - ``password: str``: password dell'utente
     - ``_sessione: requests.Session``: sessione di comunicazione con l'API
     - ``_dati: dict``: dati dell'utente
+    - ``_id: str``: identificativo numerico usato dagli endpoint dello studente
 
 
 Proprietà
@@ -62,8 +63,6 @@ Proprietà
 
         - ``biglietto_completo: dict[str, str]`` - `Biglietto <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/ticket.md>`_ [2]_
         - ``biglietto: str`` -  il biglietto, in forma di stringa e non in formato JSON [JSON]_
-        - ``secondi_rimasti: int`` - secondi rimasti alla sessione [3]_
-        - ``stato: bool`` - comunica se la sessione è ancora attiva
         - ``connesso: bool`` - comunica se la sessione è attiva **senza fare richieste all'API**
         - ``token: str`` - token della sessione
 
@@ -102,6 +101,21 @@ Proprietà
                         raise SenzaDati(f"{self} non ha i dati sufficienti per questa proprietà (forse le pagelle non sono ancora uscite)")
 
 Metodi
+
+    - ``await self.chi_sono()`` - restituisce le informazioni dell'utente autenticato
+
+    .. code-block:: python
+
+        async def chi_sono(self) -> dict[str, Any]:
+
+    Ritorno
+
+        - ``dict[str, Any]`` - identificativo e informazioni dell'utente
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.PasswordNonValida`` - la sessione non è autenticata
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione generata in caso di errore HTTP
 
     - ``await self.accedi()`` - effettua l'accesso alla sessione [6]_
 
@@ -308,7 +322,21 @@ Metodi
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
-    
+
+    - ``await self.compiti()`` - ottieni i compiti assegnati
+
+    .. code-block:: python
+
+        async def compiti(self) -> list[dict[str, Any]]:
+
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - i compiti assegnati all'utente
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
     - ``await self.bacheca()`` - ottieni il materiale in bacheca
 
     .. code-block:: python
@@ -323,15 +351,15 @@ Metodi
     
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
     
-    - ``await self.bacheca_leggi(contenuto: int)`` - ottieni un contenuto dal materiale in bacheca
+    - ``await self.bacheca_leggi(codice: str, id_: int)`` - ottieni un contenuto dal materiale in bacheca
 
     .. code-block:: python
 
-        async def bacheca_leggi(self, codice: int, id_: int) -> dict[str, dict[str, Any]]:
+        async def bacheca_leggi(self, codice: str, id_: int) -> dict[str, dict[str, Any]]:
     
     Parametri
 
-        - ``codice: int``: codice dell'evento (alla voce ``evtCode``)
+        - ``codice: str``: codice dell'evento (alla voce ``evtCode``)
         - ``id_: int``: id del contenuto da ottenere (alla voce ``pubId``)
     
     Ritorno
@@ -342,15 +370,14 @@ Metodi
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
     
-    - ``await self.bacheca_allega(codice: int, id_: int)`` - ottieni un allegato
+    - ``await self.bacheca_allega(id_: int)`` - ottieni un allegato dalla bacheca personale esterna
 
     .. code-block:: python
 
-        async def bacheca_allega(self, codice: int, id_: int) -> bytes:
+        async def bacheca_allega(self, id_: int) -> bytes:
     
     Parametri
 
-        - ``codice: int``: codice dell'evento (alla voce ``evtCode``)
         - ``id_: int``: id del contenuto da ottenere (alla voce ``pubId``)
     
     Ritorno
@@ -364,6 +391,22 @@ Metodi
     Alias
 
         - ``bacheca_allegato`` - alias per ``bacheca_allega``
+
+    - ``await self.bacheca_allega_(codice: str, id_: int, allegato: int = 1)`` - scarica un allegato dalla bacheca REST
+
+    .. code-block:: python
+
+        async def bacheca_allega_(self, codice: str, id_: int, allegato: int = 1) -> bytes:
+
+    Parametri
+
+        - ``codice: str``: codice dell'evento, alla voce ``evtCode``
+        - ``id_: int``: identificativo della pubblicazione, alla voce ``pubId``
+        - ``allegato: int``: numero dell'allegato, alla voce ``attachNum``
+
+    Ritorno
+
+        - ``bytes`` - il contenuto binario dell'allegato
     
     - ``await self.lezioni()`` - ottieni tutte le lezioni dell'anno
 
@@ -514,7 +557,21 @@ Metodi
     Eccezioni
 
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
-    
+
+    - ``await self.media()`` - ottieni le medie dello studente
+
+    .. code-block:: python
+
+        async def media(self) -> dict[str, Any]:
+
+    Ritorno
+
+        - ``dict[str, Any]`` - medie per materia e media generale
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
+
     - ``await self.periodi()`` - ottieni la suddivisione in periodi dell'anno [25]_
 
     .. code-block:: python
@@ -610,24 +667,39 @@ Metodi
         - ``classeviva.eccezioni.FormatoNonValido`` - formato della data non valido
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP di diversa natura
 
-    - ``await self.avatar()`` - ottieni 
+    - ``await self.panoramica_completa_da_a(inizio: str, fine: str)`` - ottieni la panoramica completa in un intervallo di date
 
     .. code-block:: python
 
-        async def avatar(self) -> bytes:
-    
+        async def panoramica_completa_da_a(self, inizio: str=None, fine: str=None) -> dict[str, dict[str, Any] | list[dict[str, Any]]]:
+
+    Parametri
+
+        - ``inizio: str``: data di inizio, in formato ``YYYY-MM-DD``
+        - ``fine: str``: data di fine, in formato ``YYYY-MM-DD``
+
     Ritorno
 
-        - ``bytes`` - l'immagine in formato JPEG
+        - ``dict[str, dict[str, Any] | list[dict[str, Any]]]`` - la panoramica completa dello studente
 
     Eccezioni
 
-        - ``classeviva.eccezioni.TokenNonValido`` - se il token non corrisponde a nessun avatar
+        - ``classeviva.eccezioni.FormatoNonValido`` - formato della data non valido
         - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP
 
-    ⚠️ **Avvertenze**
+    - ``await self.comunicazioni_ministero()`` - ottieni le comunicazioni ministeriali
 
-        - Non è ancora chiaro come funzioni, l'endpoint non risponde, quindi non è possibile testare il metodo correttamente
+    .. code-block:: python
+
+        async def comunicazioni_ministero(self) -> list[dict[str, Any]]:
+
+    Ritorno
+
+        - ``list[dict[str, Any]]`` - le comunicazioni ministeriali
+
+    Eccezioni
+
+        - ``classeviva.eccezioni.ErroreHTTP`` - eccezione sollevata in caso di errore HTTP di diversa natura
 
 Metodi magici [11]_
 
@@ -646,21 +718,6 @@ Metodi magici [11]_
             if (isinstance(other, Utente)):
                 return (self.id == other.id and self.password == other.password)
             return False
-
-
-Decoratori
-
-    - ``@classeviva.Utente.connettente`` - passa l'utente alla funzione come primo parametro dopo aver chiamato il metodo ``accedi()``
-
-    .. code-block:: python
-
-        @utente_.connettente
-        def foo(x: classeviva.Utente) -> None:
-            print(x.dati)
-    
-    Avvertenze
-
-        - Non funziona con le funzioni asincrone (``async def``) [8]_
 
 
 ``ListaUtenti``
@@ -750,18 +807,21 @@ Metodi magici [11]_
         def __call__(self) -> None:
             asyncio.run(self.accedi())
     
-    - ``self.__add__()`` - gestisce le addizioni (``+``, ``+=``)
+    - ``self.__add__()`` - unisce gli utenti e restituisce una nuova ListaUtenti senza modificare l'originale
 
     .. code-block:: python
 
         def __add__(self, oggetto) -> ListaUtenti:
-            if (isinstance(oggetto, Utente)):
-                self.aggiungi(oggetto)
-            elif (isinstance(oggetto, IterableABC)):
-                for oggetto_ in oggetto:
-                    self.aggiungi(oggetto_)
-            else:
-                raise TypeError(f"{oggetto} non è un oggetto valido")
+            nuova = ListaUtenti(self)
+            nuova += oggetto
+            return nuova
+
+    - ``self.__iadd__()`` - aggiunge utenti modificando la lista corrente
+
+    .. code-block:: python
+
+        def __iadd__(self, oggetto) -> ListaUtenti:
+            ...
     
     - ``self.__contains__()`` - stabilisce se un utente è presente nella lista
 
@@ -800,14 +860,42 @@ L'intero codice del modulo è riportato qui, perché breve ed esemplificativo di
 .. code-block:: python
 
     class Collegamenti:
-        base: str = "https://web.spaggiari.eu/rest"
-        accesso: str = f"{base}/v1/auth/login"
-        stato: str = f"{base}/v1/auth/status"
-        biglietto: str = f"{base}/v1/auth/ticket"
-        documenti: str = f"{base}/v1/students/{{}}/documents"
-        controllo_documento: str = f"{base}/v1/students/{{}}/documents/check/{{}}"
-        leggi_documento: str = f"{base}/v1/students/{{}}/documents/read/{{}}"
-        assenze: str = f"{base}/v1/students/{{}}/absences/details"
+        base: str = "https://web.spaggiari.eu"
+        rest: str = f"{base}/rest/w1"
+        accesso: str = f"{base}/home/app/default/login.php?target=&mode="
+        autenticazione: str = f"{base}/auth-p7/app/default/AuthApi4.php?a=aLoginPwd"
+        chi_sono: str = f"{rest}/misc/whoami"
+        biglietto: str = f"{rest}/auth/ticket"
+        documenti: str = f"{rest}/students/{{}}/documents"
+        controllo_documento: str = f"{rest}/students/{{}}/documents/check/{{}}"
+        assenze: str = f"{rest}/students/{{}}/absences/details"
+        assenze_da: str = f"{rest}/students/{{}}/absences/details/{{}}"
+        assenze_da_a: str = f"{rest}/students/{{}}/absences/details/{{}}/{{}}"
+        agenda_da_a: str = f"{rest}/students/{{}}/agendav2/all/{{}}/{{}}"
+        agenda_codice_da_a: str = f"{rest}/students/{{}}/agenda/{{}}/{{}}/{{}}"
+        didattica: str = f"{rest}/students/{{}}/didactics"
+        didattica_elemento: str = f"{rest}/students/{{}}/didactics/item/{{}}"
+        compiti: str = f"{rest}/students/{{}}/homeworks/index"
+        bacheca: str = f"{rest}/students/{{}}/noticeboard"
+        bacheca_leggi: str = f"{rest}/students/{{}}/noticeboard/readmulti/{{}}/{{}}/101"
+        bacheca_allega: str = f"{rest}/students/{{}}/noticeboard/attach/{{}}/{{}}/{{}}"
+        lezioni: str = f"{rest}/students/{{}}/lessons/today"
+        lezioni_giorno: str = f"{rest}/students/{{}}/lessons/{{}}"
+        lezioni_da_a: str = f"{rest}/students/{{}}/lessons/{{}}/{{}}"
+        lezioni_da_a_materia: str = f"{rest}/students/{{}}/lessons/{{}}/{{}}/{{}}"
+        calendario: str = f"{rest}/students/{{}}/calendar/all"
+        calendario_da_a: str = f"{rest}/students/{{}}/calendar/{{}}/{{}}"
+        libri: str = f"{rest}/students/{{}}/schoolbooks/index"
+        carta: str = f"{rest}/students/{{}}/card"
+        voti: str = f"{rest}/students/{{}}/grades{{}}"
+        media: str = f"{rest}/students/{{}}/avg"
+        periodi: str = f"{rest}/students/{{}}/periods"
+        materie: str = f"{rest}/students/{{}}/subjects"
+        note: str = f"{rest}/students/{{}}/notes/all"
+        leggi_nota: str = f"{rest}/students/{{}}/notes/{{}}/read/{{}}"
+        panoramica_da_a: str = f"{rest}/students/{{}}/overview/all/{{}}/{{}}"
+        panoramica_completa_da_a: str = f"{rest}/students/{{}}/overview/all{{}}/{{}}/{{}}"
+        comunicazioni_ministero: str = f"{rest}/noticeboarduser/{{}}/communications_minister"
 
 
 ``classeviva.eccezioni``
@@ -900,6 +988,9 @@ Rappresenta tutti gli errori HTTP provenienti dalle richieste fatte col modulo `
 
 Fornisce tutte le informazioni date dalla risposta di ``requests`` [18]_
 
+Se il corpo della risposta non contiene JSON valido, viene comunque sollevata
+``classeviva.eccezioni.ErroreHTTP`` con un messaggio generico.
+
 .. code-block:: python
 
     raise e.ErroreHTTP(f"""
@@ -968,8 +1059,15 @@ L'intero codice del modulo è riportato qui, perché breve ed esemplificativo di
 
 .. code-block:: python
 
-    # Constante che indica il tempo di connessione per una sessione
-    TEMPO_CONNESSIONE: int = 1800
+    # Tempo massimo della sessione in secondi
+    TEMPO_CONNESSIONE: int = 5400
+
+    # Timeout predefinito delle richieste HTTP in secondi
+    TIMEOUT_RICHIESTA: float = 15.0
+
+
+    def valida_inizio_fine(inizio: str | None, fine: str | None) -> tuple[str, str]:
+        """Valida le date in formato YYYY-MM-DD e restituisce YYYYMMDD."""
 
 
     # Constante che indica l'intestazione per le richieste
@@ -986,12 +1084,10 @@ Note
 .. [JSON] Per "formato ``JSON``" si intende il formato restituito dall'``API``, che non corrisponde con il valore di ritorno della funzione che, utilizzando il modulo ``json``, converte i dati in oggetti di Python
 .. [1] Studente, in Classeviva, è un utente il cui identificatore inizia con il carattere 'S'
 .. [2] Biglietto, in Classeviva, è una stringa di caratteri, ma non si è ancora capito a cosa serva
-.. [3] `Richiesta di stato <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/status.md>`_
 .. [4] Sezione "schoolReport" della risposta alla `richiesta di documenti <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md>`_
 .. [5] Sezione "documents" della risposta alla `richiesta di documenti <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Documents/documents.md>`_
 .. [6] `Richiesta di accesso <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Authentication/login.md>`_
 .. [7] `Richiesta di assenze <https://github.com/Lioydiano/Classeviva-Official-Endpoints/blob/master/Absences/absences.md>`_
-.. [8] Alla versione ``0.1.0``, ma è un miglioramento che verrà aggiunto in futuro
 .. [9] Non è necessario che contenga soltanto oggetti di quel tipo, grazie al metodo privato ``__riduci``
 .. [10] Vengono verificati tramite la loro proprietà ``Utente.connesso``
 .. [11] Sono riportati i metodi magici la cui sovrascrittura è rilevante ai fini dell'utilizzo del modulo, gli altri possno essere trovati nel codice sorgente

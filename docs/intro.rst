@@ -60,15 +60,15 @@ Utente
 
 .. code-block:: python
 
-    >>> utente.stato
+    >>> utente.connesso
     True
 
-- Verificare se il tempo è trascorso **senza fare richieste HTTP**
+- La proprietà connesso verifica la sessione senza fare richieste HTTP
 
 .. code-block:: python
 
     >>> utente.connesso
-    False
+    True
 
 - Richiedere l'elenco dei documenti e richiedere la conferma dell'esistenza del documento
 
@@ -84,11 +84,15 @@ Utente
 
     >>> assenze = asyncio.run(utente.assenze())
 
-- Richiedere l'elenco delle lezioni di una determinata materia in un range di date
+- Richiedere l'elenco delle lezioni di una determinata materia in un intervallo di date
 
 .. code-block:: python
 
-    >>> lezioni = asyncio.run(utente.lezioni_da_a_materia("2023-01-01", "2023-01-31", "206164"))
+    >>> lezioni = asyncio.run(utente.lezioni_da_a_materia(
+    ...     inizio="2023-01-01",
+    ...     fine="2023-01-31",
+    ...     materia="206164",
+    ... ))
     [
         ...,
         {
