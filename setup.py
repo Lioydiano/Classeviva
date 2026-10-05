@@ -2,7 +2,7 @@
 
 
 import setuptools
-VERSION = "1.3.0"
+VERSION = "1.3.0rc1"
 setuptools.setup(
     name='Classeviva.py',
     packages=[
