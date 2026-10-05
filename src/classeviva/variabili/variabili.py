@@ -6,11 +6,6 @@ import classeviva.eccezioni as e
 # Constante che indica il tempo di connessione per una sessione in secondi
 TEMPO_CONNESSIONE: int = 5400
 
-# Timeout (in secondi) da applicare di default a ogni richiesta HTTP,
-# per evitare che il programma resti bloccato indefinitamente
-TIMEOUT_RICHIESTA: float = 15.0
-
-
 # Constante che indica l'intestazione per le richieste
 intestazione: dict[str, str] = {
     "content-type": "application/json",
@@ -35,15 +30,17 @@ def valida_date(*dates_: str) -> Type[datetime.date] | tuple[Type[datetime.date]
 
     return dates
 
-def valida_inizio_fine(inizio: str | None, fine: str | None) -> tuple[str, str]:
+def valida_inizio_fine(
+    inizio: str | None, fine: str | None
+) -> tuple[date | datetime, date | datetime]:
     """
-    Valida le date fornite nel formato YYYY-MM-DD e le restituisce nel
-    formato YYYYMMDD, richiesto dagli endpoint REST di Classeviva.
+    Valida le date fornite nel formato YYYY-MM-DD e restituisce oggetti
+    date/datetime, mantenendo il tipo storico dei valori predefiniti.
     """
-    inizio_data = valida_date(inizio) if inizio else date(anno(), 9, 1)
-    fine_data = valida_date(fine) if fine else date(anno() + 1, 6, 30)
+    inizio_data = valida_date(inizio) if inizio else datetime(anno(), 9, 1)
+    fine_data = valida_date(fine) if fine else datetime(anno() + 1, 6, 30)
 
-    return inizio_data.strftime("%Y%m%d"), fine_data.strftime("%Y%m%d")
+    return inizio_data, fine_data
 
 def valida_anno(*year_: str) -> None:
     try:

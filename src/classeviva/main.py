@@ -9,18 +9,7 @@ import requests
 
 from .collegamenti.collegamenti import Collegamenti
 from .eccezioni.eccezioni import *
-from .variabili.variabili import TEMPO_CONNESSIONE, TIMEOUT_RICHIESTA, intestazione, data_inizio_anno, data_fine_anno, valida_date, valida_anno, valida_inizio_fine
-
-
-class _SessioneConTimeout(requests.Session):
-    """
-    Sessione requests con un timeout predefinito per ogni richiesta che non ne
-    specifica esplicitamente uno.
-    """
-
-    def request(self, *args, **kwargs):
-        kwargs.setdefault("timeout", TIMEOUT_RICHIESTA)
-        return super().request(*args, **kwargs)
+from .variabili.variabili import TEMPO_CONNESSIONE, intestazione, data_inizio_anno, data_fine_anno, valida_date, valida_anno, valida_inizio_fine
 
 
 class Utente(object):
@@ -31,7 +20,7 @@ class Utente(object):
         # altri caratteri uguali presenti all'inizio o alla fine dell'ID.
         self._id = id_.removeprefix("SGX").removesuffix("I")
         self.password = password
-        self._sessione = _SessioneConTimeout()
+        self._sessione = requests.Session()
         self._dati: dict = {}
         self._token: str | None = None
 
@@ -56,6 +45,13 @@ class Utente(object):
         if isinstance(other, Utente):
             return self._id == other._id and self.password == other.password
         return False
+
+    def connettente(self, funzione):
+        def involucro(*args, **kwargs) -> None:
+            if not self.connesso:
+                self()
+            funzione(self, *args, **kwargs)
+        return involucro
     
     async def accedi(self) -> None:
         if self.connesso:
@@ -63,7 +59,7 @@ class Utente(object):
 
         # Fai una richiesta alla pagina di accesso per ottenere il cookie `PHPSESSID` (token di sessione)
         self._sessione.headers.update(intestazione)
-        response = self._sessione.get(Collegamenti.accesso, allow_redirects=False)
+        response = self._sessione.get(Collegamenti.accesso, allow_redirects=True)
         if response.status_code not in {200, 301, 302, 303, 307, 308}:
             sollevaErroreHTTP(response=response)
 
@@ -74,23 +70,28 @@ class Utente(object):
         )
 
         if response.status_code == 200:
-            self._dati = response.json()
-            self.inizio = datetime.fromisoformat(self._dati["time"])
-            self.fine = None # con la nuova API le sessioni non hanno una scadenza (o perlomeno così sembra dalle risposte)
-            self._token = self._sessione.cookies.get("PHPSESSID")
             try:
+                self._dati = response.json()
+                self.inizio = datetime.fromisoformat(self._dati["time"])
+                self.fine = None # con la nuova API le sessioni non hanno una scadenza (o perlomeno così sembra dalle risposte)
+                self._token = self._sessione.cookies.get("PHPSESSID")
                 informazioni = await self.chi_sono()
-            except PasswordNonValida:
+                self._id = str(informazioni["id"])
+                self._dati["ident"] = informazioni.get("ident", self.id)
+            except Exception:
                 self._dati = {}
                 self._token = None
                 self.inizio = None
                 self.fine = None
                 self._sessione.cookies.clear()
                 raise
-            self._id = str(informazioni["id"])
-            self._dati["ident"] = informazioni.get("ident", self.id)
             return None
         elif response.status_code == 422:
+            self._dati = {}
+            self._token = None
+            self.inizio = None
+            self.fine = None
+            self._sessione.cookies.clear()
             raise PasswordNonValida(f"La password di {self} non combacia")
         else:
             sollevaErroreHTTP(response=response)
@@ -148,13 +149,13 @@ class Utente(object):
         response = self._sessione.get(
             Collegamenti.assenze_da.format(
                 self._id, 
-                inizio
+                inizio.strftime("%Y%m%d")
             )
         )
         if response.status_code == 200:
             return response.json()["events"]
         elif response.status_code == 404:
-            errore: str = response.json()["error"]
+            errore: str = risposta_json(response).get("error", "")
             # 120:CvvRestApi\/wrong date format
             if errore.startswith("120"):
                 raise FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
@@ -177,14 +178,15 @@ class Utente(object):
         response = self._sessione.get(
             Collegamenti.assenze_da_a.format(
                 self._id, 
-                inizio,
-                fine,
+                inizio.strftime("%Y%m%d"),
+                fine.strftime("%Y%m%d"),
             )
         )
         if response.status_code == 200:
             return response.json()["events"]
         elif response.status_code == 404:
-            errore: str = response.json()["error"]
+            dati_risposta = risposta_json(response)
+            errore: str = dati_risposta.get("error", "")
             # 120:CvvRestApi\/wrong date format
             if errore.startswith("120"):
                 raise FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
@@ -200,7 +202,7 @@ class Utente(object):
             else:
                 raise ErroreHTTP404(f"""
                     {response.text}
-                    {response.json()}
+                    {dati_risposta}
                 """)
         else:
              sollevaErroreHTTP(response=response)
@@ -228,14 +230,14 @@ class Utente(object):
         response = self._sessione.get(
             Collegamenti.agenda_da_a.format(
                 self._id,
-                inizio,
-                fine
+                inizio.strftime("%Y%m%d"),
+                fine.strftime("%Y%m%d")
             )
         )
         if response.status_code == 200:
             return response.json()["agenda"]
         elif response.status_code == 404:
-            errore: str = response.json()["error"]
+            errore: str = risposta_json(response).get("error", "")
             # 120:CvvRestApi\/wrong date format
             if errore.startswith("120"):
                 raise FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
@@ -260,14 +262,15 @@ class Utente(object):
         response = self._sessione.get(
             Collegamenti.agenda_codice_da_a.format(
                 self._id, codice,
-                inizio,
-                fine
+                inizio.strftime("%Y%m%d"),
+                fine.strftime("%Y%m%d")
             )
         )
         if response.status_code == 200:
             return response.json()["agenda"]
         elif response.status_code == 404:
-            errore: str = response.json()["error"]
+            dati_risposta = risposta_json(response)
+            errore: str = dati_risposta.get("error", "")
             # 120:CvvRestApi\/wrong date format
             if errore.startswith("120"):
                 raise FormatoNonValido(f"Formato non valido, il parametro dev'essere YYYY-MM-DD")
@@ -283,7 +286,7 @@ class Utente(object):
             else:
                 raise ErroreHTTP404(f"""
                     {response.text}
-                    {response.json()}
+                    {dati_risposta}
                 """)
         else:
              sollevaErroreHTTP(response=response)
@@ -344,7 +347,7 @@ class Utente(object):
         if not self.connesso:
             await self.accedi()
 
-        sessione_esterna = _SessioneConTimeout()
+        sessione_esterna = requests.Session()
         risposta_accesso = sessione_esterna.post(
             url="https://web.spaggiari.eu/auth-p7/app/default/AuthApi4.php?a=aLoginPwd",
             # I campi vuoti vanno inviati come stringa vuota, non come `None`: `requests`
@@ -416,8 +419,8 @@ class Utente(object):
         response = self._sessione.get(
             Collegamenti.lezioni_da_a.format(
                 self._id,
-                inizio,
-                fine
+                inizio.strftime("%Y%m%d"),
+                fine.strftime("%Y%m%d")
             )
         )
         if response.status_code == 200:
@@ -433,8 +436,8 @@ class Utente(object):
         response = self._sessione.get(
             Collegamenti.lezioni_da_a_materia.format(
                 self._id,
-                inizio,
-                fine,
+                inizio.strftime("%Y%m%d"),
+                fine.strftime("%Y%m%d"),
                 materia
             )
         )
@@ -463,7 +466,7 @@ class Utente(object):
             await self.accedi()
         response = self._sessione.get(
             Collegamenti.calendario_da_a.format(
-                self._id, inizio, fine
+                self._id, inizio.strftime("%Y%m%d"), fine.strftime("%Y%m%d")
             )
         )
 
@@ -574,7 +577,7 @@ class Utente(object):
         if response.status_code == 200:
             return response.json()["event"]["evtText"]
         elif response.status_code == 404:
-            errore: str = response.json()["error"]
+            errore: str = risposta_json(response).get("error", "")
             # 130:CvvRestApi\/invalid event-id
             if errore.startswith('130'):
                 raise ParametroNonValido(f"Nota con ID {id_} non trovata")
@@ -635,8 +638,8 @@ class Utente(object):
         response = self._sessione.get(
             Collegamenti.panoramica_da_a.format(
                 self._id,
-                inizio,
-                fine
+                inizio.strftime("%Y%m%d"),
+                fine.strftime("%Y%m%d")
             )
         )
 
@@ -654,9 +657,9 @@ class Utente(object):
         response = self._sessione.get(
             Collegamenti.panoramica_completa_da_a.format(
                 self._id,
-                inizio[2:4],  # le prime due cifre dell'anno da YYYYMMDD -> YY
-                inizio,
-                fine,
+                inizio.strftime("%y"),
+                inizio.strftime("%Y%m%d"),
+                fine.strftime("%Y%m%d"),
             )
         )
 
@@ -755,16 +758,7 @@ class ListaUtenti(set[Utente]):
     def __call__(self) -> None:
         asyncio.run(self.accedi())
 
-    def __add__(self, oggetto) -> "ListaUtenti":
-        # `+` non deve mutare l'operando di sinistra: crea e restituisce una
-        # nuova ListaUtenti, come ci si aspetta da un operatore binario.
-        # In precedenza `__add__` mutava `self` e restituiva `None`, per cui
-        # `a + b` valutava a `None` invece che a una lista di utenti.
-        nuova = ListaUtenti(self)
-        nuova += oggetto
-        return nuova
-
-    def __iadd__(self, oggetto) -> "ListaUtenti":
+    def __add__(self, oggetto) -> None:
         if isinstance(oggetto, Utente):
             self.aggiungi(oggetto)
         elif isinstance(oggetto, IterableABC):
@@ -772,7 +766,6 @@ class ListaUtenti(set[Utente]):
                 self.aggiungi(oggetto_)
         else:
             raise TypeError(f"{oggetto} non è un oggetto valido")
-        return self
 
     def __contains__(self, other: Any) -> bool:
         if isinstance(other, Utente):

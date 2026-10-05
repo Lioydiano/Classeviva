@@ -7,7 +7,5 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] in {"--help", "--version"}:
             subprocess.run([sys.executable, "-m", "pip", "show", "classeviva.py"])
-        else:
-            print(f"Argomento sconosciuto: {sys.argv[1]!r}. Argomenti validi: --help, --version")
     else:
         webbrowser.open("https://pypi.org/project/classeviva.py/")

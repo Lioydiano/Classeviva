@@ -71,6 +71,13 @@ class DataFuoriGamma(DataErrore):
     pass
 
 
+def risposta_json(response: Response):
+    try:
+        return response.json()
+    except (AttributeError, ValueError):
+        sollevaErroreHTTP(response=response)
+
+
 class ValoreNonValido(Exception):
     """
     Errori legati ai valori
