@@ -9,7 +9,14 @@ import requests
 
 from .collegamenti.collegamenti import Collegamenti
 from .eccezioni.eccezioni import *
-from .variabili.variabili import TEMPO_CONNESSIONE, intestazione, data_inizio_anno, data_fine_anno, valida_date, valida_anno, valida_inizio_fine
+from .variabili.variabili import TIMEOUT_RICHIESTA, TEMPO_CONNESSIONE, intestazione, data_inizio_anno, data_fine_anno, valida_date, valida_anno, valida_inizio_fine
+
+
+class _SessioneConTimeout(requests.Session):
+
+    def request(self, *args: Any, **kwargs: Any) -> requests.Response:
+        kwargs.setdefault("timeout", TIMEOUT_RICHIESTA)
+        return super().request(*args, **kwargs)
 
 
 class Utente(object):
@@ -20,7 +27,7 @@ class Utente(object):
         # altri caratteri uguali presenti all'inizio o alla fine dell'ID.
         self._id = id_.removeprefix("SGX").removesuffix("I")
         self.password = password
-        self._sessione = requests.Session()
+        self._sessione = _SessioneConTimeout()
         self._dati: dict = {}
         self._token: str | None = None
 
@@ -347,7 +354,7 @@ class Utente(object):
         if not self.connesso:
             await self.accedi()
 
-        sessione_esterna = requests.Session()
+        sessione_esterna = _SessioneConTimeout()
         risposta_accesso = sessione_esterna.post(
             url="https://web.spaggiari.eu/auth-p7/app/default/AuthApi4.php?a=aLoginPwd",
             # I campi vuoti vanno inviati come stringa vuota, non come `None`: `requests`
@@ -758,7 +765,18 @@ class ListaUtenti(set[Utente]):
     def __call__(self) -> None:
         asyncio.run(self.accedi())
 
-    def __add__(self, oggetto) -> None:
+    def __add__(self, oggetto) -> ListaUtenti:
+        lista = ListaUtenti(self)
+        if isinstance(oggetto, Utente):
+            lista.aggiungi(oggetto)
+        elif isinstance(oggetto, IterableABC):
+            for oggetto_ in oggetto:
+                lista.aggiungi(oggetto_)
+        else:
+            raise TypeError(f"{oggetto} non è un oggetto valido")
+        return lista
+
+    def __iadd__(self, oggetto) -> ListaUtenti:
         if isinstance(oggetto, Utente):
             self.aggiungi(oggetto)
         elif isinstance(oggetto, IterableABC):
@@ -766,6 +784,7 @@ class ListaUtenti(set[Utente]):
                 self.aggiungi(oggetto_)
         else:
             raise TypeError(f"{oggetto} non è un oggetto valido")
+        return self
 
     def __contains__(self, other: Any) -> bool:
         if isinstance(other, Utente):

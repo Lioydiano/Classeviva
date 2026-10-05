@@ -807,16 +807,19 @@ Metodi magici [11]_
         def __call__(self) -> None:
             asyncio.run(self.accedi())
     
-    - ``self.__add__()`` - aggiunge gli utenti alla lista corrente e restituisce ``None``
+    - ``self.__add__()`` - aggiunge gli utenti e restituisce una nuova lista senza modificare quella corrente
 
     .. code-block:: python
 
-        def __add__(self, oggetto) -> None:
+        def __add__(self, oggetto) -> ListaUtenti:
             ...
 
     - ``self.__iadd__()`` - aggiunge utenti modificando la lista corrente
 
     .. code-block:: python
+
+        def __iadd__(self, oggetto) -> ListaUtenti:
+            ...
 
     
     - ``self.__contains__()`` - stabilisce se un utente è presente nella lista
@@ -832,14 +835,6 @@ Metodi magici [11]_
 
 
 Decoratori
-
-    - ``@utente.connettente`` - connette l'utente prima di eseguire la funzione decorata, se necessario
-
-    .. code-block:: python
-
-        @utente.connettente
-        def operazione(utente):
-            ...
 
     - ``@classeviva.ListaUtenti.iterante`` - ripete le operazioni della funzione decorata su tutti i membri della lista quando viene chiamata
 

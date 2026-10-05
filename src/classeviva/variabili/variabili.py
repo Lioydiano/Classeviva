@@ -6,6 +6,9 @@ import classeviva.eccezioni as e
 # Constante che indica il tempo di connessione per una sessione in secondi
 TEMPO_CONNESSIONE: int = 5400
 
+# Timeout predefinito delle richieste HTTP in secondi
+TIMEOUT_RICHIESTA: float = 15.0
+
 # Constante che indica l'intestazione per le richieste
 intestazione: dict[str, str] = {
     "content-type": "application/json",
