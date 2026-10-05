@@ -6,6 +6,8 @@
 # Documentazione
 La [`documentazione italiana`](https://classeviva.readthedocs.io/it/stable/) si trova su ReadTheDocs.
 
+Le novità delle versioni sono nel [changelog](CHANGELOG.md).
+
 # Contributi
 Il codice sorgente può essere modificato su [`GitHub Dev`](https://github.dev) con l'[`editor della repository`](https://github.dev/Lioydiano/Classeviva); anche aprire delle [issue](https://github.com/Lioydiano/Classeviva/issues) può aiutare.
 
