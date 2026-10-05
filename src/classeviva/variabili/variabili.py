@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Type
 import classeviva.eccezioni as e
 
@@ -6,6 +6,8 @@ import classeviva.eccezioni as e
 # Constante che indica il tempo di connessione per una sessione in secondi
 TEMPO_CONNESSIONE: int = 5400
 
+# Timeout predefinito delle richieste HTTP in secondi
+TIMEOUT_RICHIESTA: float = 15.0
 
 # Constante che indica l'intestazione per le richieste
 intestazione: dict[str, str] = {
@@ -31,11 +33,17 @@ def valida_date(*dates_: str) -> Type[datetime.date] | tuple[Type[datetime.date]
 
     return dates
 
-def valida_inizio_fine(inizio: str | None, fine: str | None) -> tuple[Type[datetime.date], Type[datetime.date]]:
-    return (
-        valida_date(inizio) if inizio else datetime(year=anno(), month=9, day=1),
-        valida_date(fine) if fine else datetime(year=anno()+1, month=6, day=30),
-    )
+def valida_inizio_fine(
+    inizio: str | None, fine: str | None
+) -> tuple[date | datetime, date | datetime]:
+    """
+    Valida le date fornite nel formato YYYY-MM-DD e restituisce oggetti
+    date/datetime, mantenendo il tipo storico dei valori predefiniti.
+    """
+    inizio_data = valida_date(inizio) if inizio else datetime(anno(), 9, 1)
+    fine_data = valida_date(fine) if fine else datetime(anno() + 1, 6, 30)
+
+    return inizio_data, fine_data
 
 def valida_anno(*year_: str) -> None:
     try:

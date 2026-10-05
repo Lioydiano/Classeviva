@@ -7,7 +7,7 @@
 La [`documentazione italiana`](https://classeviva.readthedocs.io/it/stable/) si trova su ReadTheDocs.
 
 # Contributi
-Il codice sorgente può essere modificato su [`GitHub Dev`](https://github.dev) con l'[`editor della repository`](https://github.dev/Lioydiano/Classeviva); anche aprire delle [issue]([url](https://github.com/Lioydiano/Classeviva/issues)) può aiutare.
+Il codice sorgente può essere modificato su [`GitHub Dev`](https://github.dev) con l'[`editor della repository`](https://github.dev/Lioydiano/Classeviva); anche aprire delle [issue](https://github.com/Lioydiano/Classeviva/issues) può aiutare.
 
 # Pacchetto
 Il pacchetto può essere scaricato dal `PyPI` tramite `pip`, il progetto si trova [`qui`](https://pypi.org/project/Classeviva.py/).
