@@ -1,3 +1,10 @@
 [build-system]
 requires = ["setuptools>=42", "requests>=2.27.1"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "Classeviva.py"
+dynamic = ["version", "description", "readme", "requires-python", "license", "authors", "dependencies", "keywords", "classifiers", "urls"]
+
+[tool.setuptools.data-files]
+"share/doc/classeviva.py" = ["CHANGELOG.md"]

@@ -11,7 +11,7 @@
 ### Changed
 
 - Aggiornati gli URL di alcuni endpoint
-- Date-range requests now send dates in the format expected by the API.
+- Le richieste con un intervallo di date inviano le date nel formato richiesto dall'API.
 - `ListaUtenti + utente` ora genera una nuova lista; `ListaUtenti += utente` modifica ancora quella originale. **Il comportamento di `+` non corrisponde a quello della v1.2.11**, ma accettiamo questo cambiamento in qualità di bug fix
 
 ### Fixed
